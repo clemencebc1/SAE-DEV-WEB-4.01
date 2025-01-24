@@ -1,14 +1,11 @@
 <?php
-namespace utils;
-use utils\DBConnector;
+namespace utils\connection;
 use \PDO;
-// classe donnant des outils pour la gestion des utilisateurs
-//connexion / deconnexion / verification de connexion
 class UserTools {
     
     private static function checkDB($username, $password) {
-        $db = new PDO('mysql:host=servinfo-maria;dbname=DBbocquet', 'bocquet', 'bocquet');
-        // $db = new PDO('mysql:host=localhost;dbname=SAEPONEY', 'nathan', 'Nath2005');
+        $db = new PDO('postgresql://postgres.qwspzcdwzooofvlczlew:sbp_76e25bbc3e8bd475502ddaa127544561c0139559@aws-0-eu-west-3.pooler.supabase.com:6543/postgres');
+
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $hash = hash('sha1', $password);
         $query = $db->prepare('SELECT * FROM USER WHERE MAIL = :username AND PASSWORD = :password');

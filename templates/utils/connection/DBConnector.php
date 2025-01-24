@@ -1,14 +1,30 @@
 <?php
 declare(strict_types=1);
-namespace utils;
+namespace utils\connection;
 use \PDO;
+use \Exception;
 
 class DBConnector {
     private $pdo;
-    public function __construct($nombase, $dbuser, $dbpass){
-        $this->pdo= new PDO('mysql:host=servinfo-maria;dbname='.$nombase.'', $dbuser, $dbpass);
-        // $this->pdo= new PDO('mysql:host=localhost;dbname='.$nombase, $dbuser, $dbpass);
-    }
+    private $user;
+    private $password;
+    private $host;
+    private $port;
+    private $dbname;
+    public function __construct(){
+        $this->user = 'postgres.qwspzcdwzooofvlczlew';
+        $this->password = 'sbp_76e25bbc3e8bd475502ddaa127544561c0139559';
+        $this->host= 'aws-0-eu-west-3.pooler.supabase.com';
+        $this->port = 6543;
+        $this->dbname = 'postgres';
+        try {
+            $this->pdo = new PDO("pgsql:host=". $this->host . ";port=".$this->port.";dbname=".$this->dbname.";sslmode=require", $this->user, $this->password);
+            echo "Connecté";
+        }
+        catch (Exception $e){
+            echo $e->getMessage();
+        }
+}
     
     /**
      * get_user, verifie un utilisateur dans la base de données 
