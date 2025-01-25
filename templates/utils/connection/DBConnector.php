@@ -17,15 +17,9 @@ class DBConnector {
         $this->host= 'aws-0-eu-west-3.pooler.supabase.com';
         $this->port = 6543;
         $this->dn = "pgsql:host=".$this->host.";port=". $this->port .";dbname=postgres";
-        try {
-            $this->pdo = new PDO($this->dn, $this->user, $this->password);
-            echo "Connecté";
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        }
-        catch (Exception $e){
-            echo $e->getMessage();
-        }
+        $this->pdo = new PDO($this->dn, $this->user, $this->password);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         
 }
     

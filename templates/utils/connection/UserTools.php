@@ -8,8 +8,8 @@ class UserTools {
 
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $hash = hash('sha1', $password);
-        $query = $db->prepare('SELECT * FROM USER WHERE MAIL = :username AND PASSWORD = :password');
-        $query->execute(array('username' => $username, 'password' => $hash));
+        $query = $db->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username AND PASSWORD = :password');
+        $query->execute(array('username' => $username, 'password' => "\x" . $hash));
         $result = $query->fetch();
         return $result;
     }
