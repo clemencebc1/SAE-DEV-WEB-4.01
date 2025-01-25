@@ -43,6 +43,6 @@ body {
       <a href="#">Découvrir</a>
       <a href="#">Avis</a>
       <a href="#">Contact</a>
-      <button class="btn-connect">Se connecter</button>
+      <button class="btn-connect"><a href="connexion.php">Se connecter</a></button>
     </nav>
 </header>

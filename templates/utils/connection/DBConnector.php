@@ -10,20 +10,23 @@ class DBConnector {
     private $password;
     private $host;
     private $port;
-    private $dbname;
+    private $dn;
     public function __construct(){
         $this->user = 'postgres.qwspzcdwzooofvlczlew';
-        $this->password = 'sbp_76e25bbc3e8bd475502ddaa127544561c0139559';
+        $this->password = 'sQFn5EbtM4dKt4b4';
         $this->host= 'aws-0-eu-west-3.pooler.supabase.com';
         $this->port = 6543;
-        $this->dbname = 'postgres';
+        $this->dn = "pgsql:host=".$this->host.";port=". $this->port .";dbname=postgres";
         try {
-            $this->pdo = new PDO("pgsql:host=". $this->host . ";port=".$this->port.";dbname=".$this->dbname.";sslmode=require", $this->user, $this->password);
+            $this->pdo = new PDO($this->dn, $this->user, $this->password);
             echo "Connecté";
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         }
         catch (Exception $e){
             echo $e->getMessage();
         }
+        
 }
     
     /**
