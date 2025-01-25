@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once 'php/autoloader.php';
+require_once 'utils/autoloader.php';
 Autoloader::register();
-use utils\UserTools;
+use utils\connection\UserTools;
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
     $login = UserTools::login($_POST['email'], $_POST['password']);
     if ($login == true) {
@@ -13,6 +13,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 } else if (!empty($_POST['login']) || !empty($_POST['password'])) {
     header('Location: connexion.php?error=2');
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -57,6 +58,6 @@ link_to_css('static/connexion.css');
             </div>
         </section>
     </main>
-    <?php include('global/footer.php') ?>
+    
 </body>
 </html>
