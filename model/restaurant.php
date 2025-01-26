@@ -7,7 +7,7 @@ class Restaurant {
     private string $nom;
     private string $adresse;
     private string $website;
-    private int $capactiy;
+    private int $capacity;
     private int $nbetoile;
     private array $type_cuisine;
     private Departement $dep;
