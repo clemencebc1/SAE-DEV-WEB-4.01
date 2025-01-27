@@ -8,7 +8,30 @@ class Restaurant_render extends Render {
         parent::__construct($restaurants);
     }
     function render(): void{
-
+        echo"<section class='titre'>";
+        echo"<h1>Détails du restaurant ...</h1>";
+        echo"</section>";
+        echo"<section>";
+            echo"<div class='image_nom'>";
+                echo"<div class='image'>";
+                echo"</div>";
+                echo"<div class='nom'>";
+                echo"</div>";
+            echo"</div>";
+            echo"<div class='details_lien'>";
+                echo"<div class='details'>";
+                    echo"<p>Adresse : </p>";
+                    echo"<p>Origine : </p>";
+                    echo"<p>Inclus : </p>";
+                    echo"<p>Horaire : </p>";
+                    echo"<p>Email : </p>";
+                    echo"<p>Numéro : </p>";
+                echo"</div>";
+                echo"<div>";
+                    echo"<a href=''>Inscrivez vous dès maintenant pour voir les avis de ce restaurant !</a>";
+                echo"</div>";
+            echo"</div>";
+        echo"</section>";
     }
 
     function decouvrir(): void {
