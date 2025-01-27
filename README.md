@@ -14,3 +14,7 @@ Pour lancer le projet, vous devez :
 En ce qui concerne les tests :  
 - installer composer [https://getcomposer.org/download/]
 - installer PHPUnit via Composer [https://phpunit.de/getting-started/phpunit-9.html]
+
+
+## Annexe
+- les données utilisées proviennent en partie de [https://www.data.gouv.fr/]
