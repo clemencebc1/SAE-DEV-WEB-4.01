@@ -58,6 +58,6 @@ link_to_css('static/connexion.css');
             </div>
         </section>
     </main>
-    
+    <?php include('global/footer.php') ?>
 </body>
 </html>
