@@ -1,0 +1,4 @@
+/vendor
+composer.*
+phpunit.xml
+.phpunit.result.cache
