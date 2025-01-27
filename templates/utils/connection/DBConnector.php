@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace utils\connection;
 use \PDO;
 use \Exception;
+use model\Restaurant;
 
 class DBConnector {
     private $pdo;
@@ -40,8 +41,6 @@ class DBConnector {
         return self::$instance;
     }
 
-    
-
     /**
      * Vérifie les informations d'identification de l'utilisateur dans la base de données.
      * @param string $username Le nom d'utilisateur.
@@ -53,6 +52,13 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username AND PASSWORD = :password');
         $query->execute(array('username' => $username, 'password' => "\x" . $hash));
         $result = $query->fetch();
+        return $result;
+    }
+
+    public static function getAllRestaurants() {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
+        $query->execute();
+        $result = $query->fetchAll();
         return $result;
     }
 

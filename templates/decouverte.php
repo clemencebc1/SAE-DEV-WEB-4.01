@@ -2,6 +2,7 @@
 session_start();
 require_once 'utils/autoloader.php';
 Autoloader::register();
+use utils\connection\DBconnector;
 use utils\connection\UserTools;
 use model\Restaurant;
 use utils\render\Restaurant_render;
@@ -40,7 +41,13 @@ title_html('Connexion');
             </div>
         </section>
         <section>
-
+            <?php
+            // $all_restaurants = Restaurant_render::renderAllRestaurants();
+            $Dbrestaurants = DBconnector::getAllRestaurants();
+            echo '<pre>';
+            var_dump($Dbrestaurants);
+            echo '</pre>';
+            ?>
         </section>
     </main>
     
