@@ -8,6 +8,7 @@ class Restaurant_render extends Render {
         parent::__construct($restaurants);
     }
     function render(): void{
+        $restaurant = $_GET['id_restaurant'];
         echo"<section class='titre'>";
         echo"<h1>Détails du restaurant ...</h1>";
         echo"</section>";
