@@ -1,0 +1,21 @@
+.title h2 {
+    text-align: center;
+    font-size: 80px;
+}
+
+
+
+li {
+    list-style: none;
+}
+
+#filters {
+    background-color: white;
+    height: 20px;
+    width: 30px;
+}
+
+#filters img {
+    height: 20px;
+    width: 30px;
+}

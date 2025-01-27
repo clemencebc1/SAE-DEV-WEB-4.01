@@ -14,7 +14,7 @@ session_start()
             <?php include('global/header.php'); ?>
             <div class="title"> 
                 <h2> Une petite faim ? </h2>
-                <img id = "dessin" src="" alt="">
+                <img id = "dessin" src="img/deco_vague.jpg" alt="">
             </div>
             <main>
                 <section class="search">
@@ -26,7 +26,7 @@ session_start()
                             <li></li>
                             <li></li>
                             <li></li>
-                            <li><button src="" type="button" onclick="#"></button></li>
+                            <li><button id="filters" type="button" onclick="#"><img src="img/more.png" alt=""></button></li>
                             <div class="more-filter">
 
                             </div>
