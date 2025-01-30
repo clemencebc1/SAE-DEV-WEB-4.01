@@ -34,7 +34,7 @@ class DBConnector {
      * Retourne l'instance unique de la connexion à la base de données.
      * @return PDO L'instance de la connexion à la base de données.
      */
-    public static function getInstance() {
+    public static function getInstance(): PDO {
         if (self::$instance == null) {
             new DBconnector();
         }
@@ -47,7 +47,7 @@ class DBConnector {
      * @param string $hashedPassword Le mot de passe haché.
      * @return mixed Les informations de l'utilisateur si elles sont trouvées, sinon false.
      */
-    public static function checkDB($username, $password) {
+    public static function checkDB($username, $password): mixed {
         $hash = hash('sha1', $password);
         $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username AND PASSWORD = :password');
         $query->execute(array('username' => $username, 'password' => "\x" . $hash));
@@ -55,7 +55,14 @@ class DBConnector {
         return $result;
     }
 
-    public static function getAllRestaurants() {
+    public static function subscribe($username, $password, $nom, $prenom): bool {
+        $hash = hash('sha1', $password);
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, visiteur)');
+        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom));
+        return $result;
+    }
+
+    public static function getAllRestaurants(): array {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
         $query->execute();
         $result = $query->fetchAll();

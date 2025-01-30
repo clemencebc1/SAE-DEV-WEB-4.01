@@ -7,7 +7,7 @@ class Restaurant {
     private string $nom;
     private string $adresse;
     private string $website;
-    private int $capactiy;
+    private int $capacity;
     private int $nbetoile;
     private array $type_cuisine;
     private Departement $dep;
@@ -23,7 +23,7 @@ class Restaurant {
         $this->nbetoile = $nbetoile;
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
-        $this->typecuisine = $typecuisne;
+        $this->typecuisine = $typecuisine;
     }
 
     public function getNom(): string {

@@ -3,13 +3,24 @@ namespace utils\connection;
 // use \PDO;
 use utils\connection\DBconnector;
 class UserTools {
-    
-    private static function checkDB($username, $password) {
+
+    /**
+     * cree une connexion avec la base de données
+     * @param mixed $username 
+     * @param mixed $password
+     */
+    private static function checkDB($username, $password): mixed {
         $result = DBconnector::checkDB($username, $password);
         return $result;
     }
 
-    public static function login($username, $password) {
+    /**
+     * connecte l'utilisateur à la base de données (à son compte)
+     * @param mixed $username
+     * @param mixed $password
+     * @return bool true si possède un compte/bon mdp, false sinon
+     */
+    public static function login($username, $password): bool {
         $user = self::checkDB($username, $password);
         $status = false;
         if ($user) {
@@ -19,15 +30,24 @@ class UserTools {
         return $status;
     }
  
-    public static function generateToken() {
-        $token = bin2hex(random_bytes(32));
+    /**
+     * genere un token pour l'utilisateur
+     * @return string
+     */
+    public static function generateToken(): string {
+        $token = bin2hex(random_bytes(length: 32));
         setcookie('token', $token, time() + 3600);
         return $token;
     }
 
-    public static function checkTokenValidity($token) {
+    /**
+     * verifie la validité du token
+     * @param mixed $token
+     * @return bool
+     */
+    public static function checkTokenValidity($token): bool {
         $validity = true;
-        if (isempty($_COOKIE['token'])) {
+        if (empty($_COOKIE['token'])) {
             $validity = false;
         }else if ($token !== $_COOKIE['token']) {
             $validity = false;
@@ -35,37 +55,39 @@ class UserTools {
         return $validity;
     }
 
-    public static function logout() {
+    /**
+     * deconnexion de l'utilisateur
+     * @return void
+     */
+    public static function logout(): void {
         unset($_SESSION['user']);
+        return true;
     }
 
-    public static function isLogged() {
+
+    public static function isLogged(): bool {
         return isset($_SESSION['user']);
     }
 
-    public static function requireLogin() {
+    /**
+     * verifie si l'utilisateur est connecté pour acceder a la page
+     * @return void
+     */
+    public static function requireLogin(): void {
         if (!self::isLogged()) {
             header('Location: connexion.php');
             exit();
         }
     }
 
-    public static function getUserToken() {
+
+    // Getters
+    public static function getUserToken(): mixed {
         return $_SESSION['user']['token'];
     }
 
-    public static function getUserRole() {
+    public static function getUserRole(): mixed {
         return $_SESSION['user']['role'];
-    }
-
-    public static function isAdmin() {
-        return self::getUserRole() === 'ADMIN';
-    }
-    public static function isAdherent() {
-        return self::getUserRole() === 'ADHERENT';
-    }
-    public static function isMoniteur() {
-        return self::getUserRole() === 'MONITEUR';
     }
 }
 ?>

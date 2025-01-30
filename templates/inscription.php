@@ -2,14 +2,17 @@
 <html lang="fr">
 <?php include('global/head.php'); 
 title_html('Inscription');
-link_to_css('static/inscription.css');?>
+link_to_css('static/inscription.css');
+require_once 'utils/autoloader.php';
+Autoloader::register();
+use utils\connection\UserTools;?>
 <body>
     <?php include('global/header.php'); ?>
     <main>
         <section class="form-section">
             <div class="form-container">
                 <h1>Inscription</h1>
-                <form action="#" method="post">
+                <form action="utils/connection/subscribe.php" method="post">
                     <label for="name">Nom </label>
                     <input type="text" id="name" name="name" placeholder="Votre nom" required>
 
@@ -24,6 +27,9 @@ link_to_css('static/inscription.css');?>
 
                     <button type="submit">Submit</button>
                 </form>
+                <p><?php if (!(empty($_GET))){
+                    echo "Vous avez déjà un compte";
+                    }?></p>
             </div>
         </section>
     </main>
