@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
-<?php include('global/head.php'); 
-title_html('Inscription');
-link_to_css('static/inscription.css');
+<?php 
 require_once 'utils/autoloader.php';
 Autoloader::register();
-use utils\connection\UserTools;?>
+use utils\connection\DBConnector;
+use utils\connection\UserTools;
+include('global/head.php'); 
+title_html('Inscription');
+link_to_css('static/inscription.css');
+if (!empty($_POST)){
+    $subscribe = DBConnector::subscribe($_POST['email'],$_POST['password'], $_POST['name'], $_POST['prenom'], 'visiteur');
+}
+?>
 <body>
     <?php include('global/header.php'); ?>
     <main>
         <section class="form-section">
             <div class="form-container">
                 <h1>Inscription</h1>
-                <form action="utils/connection/subscribe.php" method="post">
+                <form action="" method="post">
                     <label for="name">Nom </label>
                     <input type="text" id="name" name="name" placeholder="Votre nom" required>
 
@@ -27,9 +33,16 @@ use utils\connection\UserTools;?>
 
                     <button type="submit">Submit</button>
                 </form>
-                <p><?php if (!(empty($_GET))){
-                    echo "Vous avez déjà un compte";
-                    }?></p>
+                <p><?php if ($subscribe) {
+                            $login = UserTools::login($_POST['email'], $_POST['password']);
+                            header('Location: index_connected.php');
+                        } else {
+                            $_GET['error'] = true;
+                            echo "<p>Vous avez déjà un compte avec ". $_POST['email'] ."</p>";
+                        }
+                        session_start();
+                        $status = UserTools::isLogged();
+                    ?></p>
             </div>
         </section>
     </main>

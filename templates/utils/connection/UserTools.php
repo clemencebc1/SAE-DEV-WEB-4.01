@@ -2,6 +2,8 @@
 namespace utils\connection;
 // use \PDO;
 use utils\connection\DBconnector;
+
+
 class UserTools {
 
     /**
@@ -24,7 +26,7 @@ class UserTools {
         $user = self::checkDB($username, $password);
         $status = false;
         if ($user) {
-            $_SESSION['user'] = array('username' => $user['MAIL'], 'token' => self::generateToken(), 'role' => $user['ROLE']);
+            $_SESSION['user'] = array('username' => $username, 'token' => self::generateToken(), 'role' => $user['role']);
             $status = true;
         }
         return $status;
@@ -59,7 +61,7 @@ class UserTools {
      * deconnexion de l'utilisateur
      * @return void
      */
-    public static function logout(): void {
+    public static function logout(): bool {
         unset($_SESSION['user']);
         return true;
     }

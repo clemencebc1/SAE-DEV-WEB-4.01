@@ -55,10 +55,10 @@ class DBConnector {
         return $result;
     }
 
-    public static function subscribe($username, $password, $nom, $prenom): bool {
+    public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
         $hash = hash('sha1', $password);
-        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, visiteur)');
-        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom));
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
+        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
         return $result;
     }
 
@@ -66,6 +66,19 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
         $query->execute();
         $result = $query->fetchAll();
+        return $result;
+    }
+    public static function getAllType(): array {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine"');
+        $query->execute();
+        $result = $query->fetchAll();
+        return $result;
+    }
+
+    public static function getLatestRestaurant($user): array {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, url FROM public."Critique" natural join public."Restaurant" natural join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
+        $query->execute(['user' => $user]);
+        $result = $query->fetch();
         return $result;
     }
 
