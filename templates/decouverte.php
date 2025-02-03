@@ -4,29 +4,23 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBconnector;
 use utils\connection\UserTools;
+use model\Departement;
 use model\Restaurant;
+use model\Critique;
 use utils\render\Restaurant_render;
-use model\critique;
 
-$all_restaurants = DBconnector::getAllRestaurants();
-$render = new Restaurant_render($all_restaurants); 
-// switch ($_GET["search"]) {
-//     // case 'ville':
-//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByCity($_GET["search"]);
-//     //     break;
-//     // case 'restaurant':
-//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByName($_GET["search"]);
-//     //     break;
-//     // case 'type':
-//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByType($_GET["search"]);
-//     //     break;
-//     // default:
-//     //     $all_restaurants = Restaurant_render::renderAllRestaurants();
-//     //     break;
-//     default:
-//         $all_restaurants = Restaurant_render::renderAllRestaurants();
-//         break;   
-// }
+
+$restaurants = [];
+if (!(empty($_GET["search"]))) {
+    $restaurants = [];
+    $byType = DBconnector::searchRestaurantByType($_GET["search"]);
+    $byName = DBconnector::searchRestaurantByName($_GET["search"]);
+    $byCity = DBconnector::searchRestaurantByCity($_GET["search"]);
+    $restaurants = array_merge($byName, $byType, $byCity);
+}
+
+(empty($_GET["search"])) ? $restaurants = DBconnector::getAllRestaurants() : null;
+$render = new Restaurant_render($restaurants);
 ?>
 
 <!DOCTYPE html>
@@ -60,12 +54,12 @@ title_html('Connexion');
         </section>
         <section>
             <?php
-            // $all_restaurants = Restaurant_render::renderAllRestaurants();
+            // $restaurants = Restaurant_render::renderAllRestaurants();
             // $Dbrestaurants = DBconnector::getAllRestaurants();
 
-            echo '<pre>';
-            var_dump($all_restaurants);
-            echo '</pre>';
+            // echo '<pre>';
+            // var_dump($restaurants);
+            // echo '</pre>';
             echo $render->decouvrir();
             ?>
         </section>

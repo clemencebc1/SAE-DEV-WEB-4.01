@@ -160,12 +160,8 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE cuisine LIKE :type');
         $query->execute(array('type' => '%'.$type.'%'));
         $types = $query->fetchAll();
-        echo '<pre>';
-        // var_dump($types);
-        echo '</pre>';
         $all_restaurants = [];
         foreach ($types as $idCuisine) {
-            echo $idCuisine['id'];
             $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE cuisine = :idC');
             $query->execute(array('idC' => $idCuisine['id']));
             $result = $query->fetchAll();

@@ -52,6 +52,14 @@ class Restaurant {
         return $this->dep->getNomdep();
     }  
 
+    public function __toString(): string {
+        return $this->nom;
+    }
+
+    public function equals(Restaurant $restaurant): bool {
+        return $this->id === $restaurant->getId();
+    }
+
 }
 
 ?>
