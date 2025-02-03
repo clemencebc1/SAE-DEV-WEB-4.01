@@ -9,6 +9,7 @@ UserTools::requireLogin();
 $dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
 
 $categories = DBConnector::getAllType();
+$all_restaurants = DBConnector::getAllRestaurants();
 ?>
 
 <!DOCTYPE html>
@@ -44,18 +45,29 @@ link_to_css('static/index_connected.css');
                 <div class="dropdown">
                     <button class="dropbtn">🍽️ Restaurant ▼</button>
                     <div class="dropdown-content">
-                        <?php foreach ($categories as $categorie){
-                            echo "<a href='#'>" . $categorie['type'] . "</a>";
-                            }?>
+                        <?php 
+                        $cpt = count($all_restaurants);
+                        if (count($all_restaurants)>5){
+                            $cpt = 5;
+                        }
+                        for($i =0; $i<$cpt;$i++){
+                         echo "<a href='#'>" . $all_restaurants[$i]['nom'] . "</a>";
+                        }?>
                     </div>
                 </div>
 
                 <div class="dropdown">
                     <button class="dropbtn">🥄 Cuisine ▼</button>
                     <div class="dropdown-content">
-                        <a href="#">Italien</a>
-                        <a href="#">Français</a>
-                        <a href="#">Végétarien</a>
+                    <?php 
+                        $cpt = count($categories);
+                        if (count($categories)>5){
+                            $cpt = 5;
+                        }
+                    
+                        for($i =0; $i<$cpt;$i++){
+                         echo "<a href='#'>" . $categories[$i]['cuisine'] . "</a>";
+                        }?>
                     </div>
                 </div>
 

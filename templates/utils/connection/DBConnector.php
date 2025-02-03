@@ -82,5 +82,12 @@ class DBConnector {
         return $result;
     }
 
+    public static function getCritiquesByUser($user): array {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, message, date_test, id_critique FROM public."Critique" natural join public."Restaurant" WHERE mail_user=:user ORDER BY date_test DESC');
+        $query->execute(['user' => $user]);
+        $result = $query->fetch();
+        return $result;
+    }
+
 }
 ?>

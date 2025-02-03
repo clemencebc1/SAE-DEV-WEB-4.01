@@ -57,7 +57,10 @@ body {
     cursor: pointer;
     transition: opacity 0.3s;
 }
-
+.logout a {
+    color: white;
+    text-decoration: none;
+}
 .logout:hover {
     opacity: 0.8;
 }
@@ -70,12 +73,12 @@ body {
         </div>
         <nav class="nav">
             <a href="#">Favoris</a>
-            <a href="#">Mes Critiques</a>
+            <a href="mescritiques.php">Mes Critiques</a>
             <a href="#">Contact</a>
         </nav>
         <div class="icons">
             <img src="../img/home-icon.png" alt="Accueil"><a href="#"></a>
             <img src="../img/user-icon.png" alt="Profil"><a href="#"></a>
-            <button class="logout"><a href="../utils/connection/logout.php"></a>Se déconnecter</button>
+            <button class="logout"><a href="utils/connection/logout.php">Se déconnecter</a></button>
         </div>
 </header>

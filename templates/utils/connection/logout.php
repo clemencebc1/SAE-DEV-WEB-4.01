@@ -8,7 +8,7 @@ session_destroy();
 session_start();
 $status = UserTools::isLogged();
 if ($status == false) {
-    header('Location: index.php');
+    header('Location: connexion.php');
 }else {
     echo "Erreur de déconnexion";
 }
