@@ -14,7 +14,9 @@ session_start()
             <?php include('global/header.php'); ?>
             <div class="title"> 
                 <h2> Une petite faim ? </h2>
-                <img id = "dessin" src="img/deco_vague.jpg" alt="">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20%" height="50" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0,5 Q20,0 40,5 T100,5" fill="none" stroke="orange" stroke-width="1.5" />
+                </svg>
             </div>
             <main>
                 <section class="search">
