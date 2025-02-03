@@ -4,6 +4,7 @@ namespace utils\connection;
 use \PDO;
 use \Exception;
 use model\Restaurant;
+use model\Departement;
 
 class DBConnector {
     private $pdo;
@@ -55,11 +56,94 @@ class DBConnector {
         return $result;
     }
 
+
+    /**
+     * Récupère le département par son identifiant.
+     * @param int $id L'identifiant du département.
+     * @return Departement Le département.
+     */
+    public static function getDepartementById($id) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Departement" WHERE id_region = :idD');
+        $query->execute(array('idD' => $id));
+        $result = $query->fetch();
+        $dep = new Departement($result['id_region'], $result['nom_dep']);
+        return $dep;
+    }
+
+
+    /**
+     * Récupère le type de cuisine par son identifiant.
+     * @param int $id L'identifiant du type de cuisine.
+     * @return string Le type de cuisine.
+     */
+    public static function getTypeCuisineById($id) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE id = :idT');
+        $query->execute(array('idT' => $id));
+        $result = $query->fetch();
+        return $result['cuisine'];
+    }
+
+    /**
+     * Récupère tous les restaurants de la base de données.
+     * @return array[Restaurant]  Les restaurants de la base de données.
+     */
     public static function getAllRestaurants() {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
         $query->execute();
         $result = $query->fetchAll();
-        return $result;
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'], 
+                $restaurant['website'], 
+                $restaurant['capacity'], 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
+                self::getTypeCuisineById($restaurant['cuisine']),
+                self::getDepartementById($restaurant['region_id']));
+        }
+        return $all_restaurants;
+    }
+
+    /**
+     * Récupère un restaurant par son identifiant.
+     * @param int $id L'identifiant du restaurant.
+     * @return Restaurant Le restaurant.
+     */
+    public static function getRestaurantById($id) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE id_resto = :idR');
+        $query->execute(array('idR' => $id));
+        $result = $query->fetch();
+        foreach ($result as $restaurant) {
+            $restaurant = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'], 
+                $restaurant['website'], 
+                $restaurant['capacity'], 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
+                self::getTypeCuisineById($restaurant['cuisine']),
+                self::getDepartementById($restaurant['region_id']));
+        }
+        return $restaurant;
+    }
+
+    public static function getRestaurantByCity($city) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE adresse LIKE %:city%');
+        $query->execute(array('city' => $city));
+        $result = $query->fetch();
+
+        $restaurant = new Restaurant(
+            $result['id_resto'], 
+            $result['nom'], 
+            $result['adresse'], 
+            $result['website'], 
+            $result['capacity'], 
+            $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0, 
+            self::getTypeCuisineById($result['cuisine']),
+            self::getDepartementById($result['region_id']));
+        return $restaurant;
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'utils/autoloader.php';
+require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBconnector;
 use utils\connection\UserTools;
@@ -8,7 +8,25 @@ use model\Restaurant;
 use utils\render\Restaurant_render;
 use model\critique;
 
-$all_restaurants = [];
+$all_restaurants = DBconnector::getAllRestaurants();
+$render = new Restaurant_render($all_restaurants); 
+// switch ($_GET["search"]) {
+//     // case 'ville':
+//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByCity($_GET["search"]);
+//     //     break;
+//     // case 'restaurant':
+//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByName($_GET["search"]);
+//     //     break;
+//     // case 'type':
+//     //     $all_restaurants = Restaurant_render::renderAllRestaurantsByType($_GET["search"]);
+//     //     break;
+//     // default:
+//     //     $all_restaurants = Restaurant_render::renderAllRestaurants();
+//     //     break;
+//     default:
+//         $all_restaurants = Restaurant_render::renderAllRestaurants();
+//         break;   
+// }
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +45,7 @@ title_html('Connexion');
                 <h2>selon vos envies</h2>
             </div>
             <div id="search-container">
-                <form action="search.php" method="get">
+                    <form action="" method="get">
                     <input type="text" name="search" id="search" placeholder="Ville, Restaurant, type de cuisine..">
                     <button type="submit">Rechercher</button>
                 </form>
@@ -43,10 +61,12 @@ title_html('Connexion');
         <section>
             <?php
             // $all_restaurants = Restaurant_render::renderAllRestaurants();
-            $Dbrestaurants = DBconnector::getAllRestaurants();
+            // $Dbrestaurants = DBconnector::getAllRestaurants();
+
             echo '<pre>';
-            var_dump($Dbrestaurants);
+            var_dump($all_restaurants);
             echo '</pre>';
+            echo $render->decouvrir();
             ?>
         </section>
     </main>
