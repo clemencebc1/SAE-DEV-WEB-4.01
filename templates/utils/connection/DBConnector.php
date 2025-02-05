@@ -5,6 +5,7 @@ use \PDO;
 use \Exception;
 use model\Restaurant;
 use model\Departement;
+use model\TypeCuisine;
 
 class DBConnector {
     private $pdo;
@@ -80,7 +81,8 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE id = :idT');
         $query->execute(array('idT' => $id));
         $result = $query->fetch();
-        return $result['cuisine'];
+        $typeCuisine = new TypeCuisine($result['id'], $result['cuisine']);
+        return $typeCuisine;
     }
 
     /**
@@ -121,16 +123,16 @@ class DBConnector {
     public static function getRestaurantById($id) {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE id_resto = :idR');
         $query->execute(array('idR' => $id));
-        $result = $query->fetchAll();
+        $result = $query->fetch();
         $restaurant = new Restaurant(
-            $restaurant['id_resto'], 
-            $restaurant['nom'], 
-            $restaurant['adresse'], 
-            $restaurant['website'], 
-            $restaurant['capacity'], 
-            $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
-            self::getTypeCuisineById($restaurant['cuisine']),
-            self::getDepartementById($restaurant['region_id']));
+            $result['id_resto'], 
+            $result['nom'], 
+            $result['adresse'], 
+            $result['website'], 
+            $result['capacity'], 
+            $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0, 
+            self::getTypeCuisineById($result['cuisine']),
+            self::getDepartementById($result['region_id']));
         return $restaurant;
     }
 
@@ -209,18 +211,30 @@ class DBConnector {
                 self::getDepartementById($restaurant['region_id']));
         }
         return $all_restaurants;
-    }    public static function getAllType(): array {
+    }    
+    
+    public static function getAllType(): array {
         $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine"');
         $query->execute();
         $result = $query->fetchAll();
-        return $result;
+        $all_type = [];
+        foreach ($result as $type) {
+            $all_type[] = new TypeCuisine($type['id'], $type['cuisine']);
+        }
+        return $all_type;
     }
 
-    public static function getLatestRestaurant($user): array {
+    /**
+     * Récupere le dernier restaurant visité par un utilisateur.
+     * @param string $user L'adresse mail de l'utilisateur.
+     * @return Restaurant le restaurant en question.
+     */
+    public static function getLatestRestaurant($user): Restaurant {
         $query = self::getInstance()->prepare('SELECT nom, id_resto, url FROM public."Critique" natural join public."Restaurant" natural join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
         $query->execute(['user' => $user]);
         $result = $query->fetch();
-        return $result;
+        $restaurant = self::getRestaurantById($result['id_resto']);
+        return $restaurant;
     }
 
     public static function getCritiquesByUser($user): array {

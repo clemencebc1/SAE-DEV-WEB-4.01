@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace model;
 use model\Departement;
+use model\TypeCuisine;
 class Restaurant {
     private int $id;
     private string $nom;
@@ -9,11 +10,10 @@ class Restaurant {
     private string $website;
     private int $capacity;
     private int $nbetoile;
-    private string $type_cuisine;
+    private TypeCuisine $type_cuisine;
     private Departement $dep;
-    private array $typecuisine;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, array $type_cuisine, Departement $departement, array $typecuisine){
+    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, TypeCuisine $type_cuisine, Departement $departement){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;
@@ -22,7 +22,6 @@ class Restaurant {
         $this->nbetoile = $nbetoile;
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
-        $this->typecuisine = $typecuisine;
     }
 
     public function getNom(): string {

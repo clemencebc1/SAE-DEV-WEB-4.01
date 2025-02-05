@@ -4,12 +4,13 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
+use utils\render\Restaurant_render;
 UserTools::requireLogin();
-
-$dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
-
-$categories = DBConnector::getAllType();
 $all_restaurants = DBConnector::getAllRestaurants();
+$dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
+$categories = DBConnector::getAllType();
+$dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
+
 ?>
 
 <!DOCTYPE html>
@@ -27,11 +28,12 @@ link_to_css('static/index_connected.css');
         <div class="last-review">
             <h2>Vous avez testé récemment ? <a href="#">Laissez un avis !</a></h2>
             <div class="restaurant-card">
-                <img src=<?php echo "'" . $dernier_restaurant['url'] . "'" ?> alt="">
+                <!-- <img src=<?php //echo "'" . $dernier_restaurant['url'] . "'" ?> alt="">
                 <div class="restaurant-info">
-                    <h3><?php echo $dernier_restaurant['nom'] ?></h3>
+                    <h3><?php //echo $dernier_restaurant['nom'] ?></h3>
                     <p>Orléans</p>
-                </div>
+                </div> -->
+                <?php $dernier_restau_render->decouvrir()?>
             </div>
         </div>
 
