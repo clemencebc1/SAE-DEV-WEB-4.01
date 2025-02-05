@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'utils/autoloader.php';
+require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\UserTools;
 if (!empty($_POST['email']) && !empty($_POST['password'])) {

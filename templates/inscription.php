@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <?php 
-require_once 'utils/autoloader.php';
+require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;

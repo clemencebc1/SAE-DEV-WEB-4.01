@@ -11,7 +11,6 @@ class Autoloader {
             // echo $file;
             require $file;
         } else {
-            var_dump($file);
             throw new Exception("Failed opening required '$file'"); //debug au cas ou l autoload ne fonctionne pas
         }
     }
