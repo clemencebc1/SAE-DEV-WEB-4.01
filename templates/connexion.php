@@ -6,7 +6,7 @@ use utils\connection\UserTools;
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
     $login = UserTools::login($_POST['email'], $_POST['password']);
     if ($login == true) {
-        header('Location: ../index_connected.php');
+        header('Location: index_connected.php');
     } else {
         header('Location: connexion.php?error=1');
     }
@@ -58,6 +58,6 @@ link_to_css('static/connexion.css');
             </div>
         </section>
     </main>
-    
+    <?php include('global/footer.php') ?>
 </body>
 </html>

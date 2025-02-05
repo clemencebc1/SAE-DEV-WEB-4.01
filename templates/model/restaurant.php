@@ -7,12 +7,13 @@ class Restaurant {
     private string $nom;
     private string $adresse;
     private string $website;
-    private int $capactiy;
+    private int $capacity;
     private int $nbetoile;
     private string $type_cuisine;
     private Departement $dep;
+    private array $typecuisine;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, string $type_cuisine, Departement $departement){
+    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, array $type_cuisine, Departement $departement, array $typecuisine){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;
@@ -21,6 +22,7 @@ class Restaurant {
         $this->nbetoile = $nbetoile;
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
+        $this->typecuisine = $typecuisine;
     }
 
     public function getNom(): string {

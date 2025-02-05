@@ -35,7 +35,7 @@ class DBConnector {
      * Retourne l'instance unique de la connexion à la base de données.
      * @return PDO L'instance de la connexion à la base de données.
      */
-    public static function getInstance() {
+    public static function getInstance(): PDO {
         if (self::$instance == null) {
             new DBconnector();
         }
@@ -48,7 +48,7 @@ class DBConnector {
      * @param string $hashedPassword Le mot de passe haché.
      * @return mixed Les informations de l'utilisateur si elles sont trouvées, sinon false.
      */
-    public static function checkDB($username, $password) {
+    public static function checkDB($username, $password): mixed {
         $hash = hash('sha1', $password);
         $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username AND PASSWORD = :password');
         $query->execute(array('username' => $username, 'password' => "\x" . $hash));
@@ -87,7 +87,14 @@ class DBConnector {
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
-    public static function getAllRestaurants() {
+    public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
+        $hash = hash('sha1', $password);
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
+        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
+        return $result;
+    }
+
+    public static function getAllRestaurants(): array {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
         $query->execute();
         $result = $query->fetchAll();
@@ -202,6 +209,26 @@ class DBConnector {
                 self::getDepartementById($restaurant['region_id']));
         }
         return $all_restaurants;
+    }    public static function getAllType(): array {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine"');
+        $query->execute();
+        $result = $query->fetchAll();
+        return $result;
     }
+
+    public static function getLatestRestaurant($user): array {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, url FROM public."Critique" natural join public."Restaurant" natural join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
+        $query->execute(['user' => $user]);
+        $result = $query->fetch();
+        return $result;
+    }
+
+    public static function getCritiquesByUser($user): array {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, message, date_test, id_critique FROM public."Critique" natural join public."Restaurant" WHERE mail_user=:user ORDER BY date_test DESC');
+        $query->execute(['user' => $user]);
+        $result = $query->fetch();
+        return $result;
+    }
+
 }
 ?>
