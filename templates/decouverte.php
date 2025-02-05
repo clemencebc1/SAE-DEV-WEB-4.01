@@ -1,14 +1,26 @@
 <?php
 session_start();
-require_once 'utils/autoloader.php';
+require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBconnector;
 use utils\connection\UserTools;
+use model\Departement;
 use model\Restaurant;
+use model\Critique;
 use utils\render\Restaurant_render;
-use model\critique;
 
-$all_restaurants = [];
+
+$restaurants = [];
+if (!(empty($_GET["search"]))) {
+    $restaurants = [];
+    $byType = DBconnector::searchRestaurantByType($_GET["search"]);
+    $byName = DBconnector::searchRestaurantByName($_GET["search"]);
+    $byCity = DBconnector::searchRestaurantByCity($_GET["search"]);
+    $restaurants = array_merge($byName, $byType, $byCity);
+}
+
+(empty($_GET["search"])) ? $restaurants = DBconnector::getAllRestaurants() : null;
+$render = new Restaurant_render($restaurants);
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +39,7 @@ title_html('Connexion');
                 <h2>selon vos envies</h2>
             </div>
             <div id="search-container">
-                <form action="search.php" method="get">
+                    <form action="" method="get">
                     <input type="text" name="search" id="search" placeholder="Ville, Restaurant, type de cuisine..">
                     <button type="submit">Rechercher</button>
                 </form>
@@ -42,11 +54,13 @@ title_html('Connexion');
         </section>
         <section>
             <?php
-            // $all_restaurants = Restaurant_render::renderAllRestaurants();
-            $Dbrestaurants = DBconnector::getAllRestaurants();
-            echo '<pre>';
-            var_dump($Dbrestaurants);
-            echo '</pre>';
+            // $restaurants = Restaurant_render::renderAllRestaurants();
+            // $Dbrestaurants = DBconnector::getAllRestaurants();
+
+            // echo '<pre>';
+            // var_dump($restaurants);
+            // echo '</pre>';
+            echo $render->decouvrir();
             ?>
         </section>
     </main>

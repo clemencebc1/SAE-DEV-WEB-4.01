@@ -9,10 +9,9 @@ class Restaurant {
     private string $website;
     private int $capacity;
     private int $nbetoile;
-    private array $type_cuisine;
+    private string $type_cuisine;
     private Departement $dep;
     private array $typecuisine;
-
 
     public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, array $type_cuisine, Departement $departement, array $typecuisine){
         $this->id = $id;
@@ -44,13 +43,24 @@ class Restaurant {
     public function getNbEtoile(): int {
         return $this->nbetoile;
     }
-    public function getTypeCuisine(): array {
+    public function getTypeCuisine(): string {
         return $this->type_cuisine;
     }
     public function getDepartement(): Departement {
         return $this->dep;
     }
 
+    public function getRegion(): string {
+        return $this->dep->getNomdep();
+    }  
+
+    public function __toString(): string {
+        return $this->nom;
+    }
+
+    public function equals(Restaurant $restaurant): bool {
+        return $this->id === $restaurant->getId();
+    }
 
 }
 
