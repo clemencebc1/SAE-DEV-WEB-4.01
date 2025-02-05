@@ -57,6 +57,13 @@ class DBConnector {
         return $result;
     }
 
+        
+    public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
+        $hash = hash('sha1', $password);
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
+        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
+        return $result;
+    }
 
     /**
      * Récupère le département par son identifiant.
@@ -89,13 +96,6 @@ class DBConnector {
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
-    public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
-        $hash = hash('sha1', $password);
-        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
-        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
-        return $result;
-    }
-
     public static function getAllRestaurants(): array {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"');
         $query->execute();
