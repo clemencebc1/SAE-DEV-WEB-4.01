@@ -27,14 +27,7 @@ link_to_css('static/index_connected.css');
         <div class="container">
         <div class="last-review">
             <h2>Vous avez testé récemment ? <a href="#">Laissez un avis !</a></h2>
-            <div class="restaurant-card">
-                <!-- <img src=<?php //echo "'" . $dernier_restaurant['url'] . "'" ?> alt="">
-                <div class="restaurant-info">
-                    <h3><?php //echo $dernier_restaurant['nom'] ?></h3>
-                    <p>Orléans</p>
-                </div> -->
-                <?php $dernier_restau_render->decouvrir()?>
-            </div>
+            <?php $dernier_restau_render->lastestRestaurant(); ?>
         </div>
 
         <div class="search-section">
@@ -52,8 +45,8 @@ link_to_css('static/index_connected.css');
                         if (count($all_restaurants)>5){
                             $cpt = 5;
                         }
-                        for($i =0; $i<$cpt;$i++){
-                         echo "<a href='#'>" . $all_restaurants[$i]['nom'] . "</a>";
+                        for($i = 0; $i<$cpt;$i++){
+                         echo "<a href='#'>" . $all_restaurants[$i]->getNom() . "</a>";
                         }?>
                     </div>
                 </div>
@@ -68,7 +61,7 @@ link_to_css('static/index_connected.css');
                         }
                     
                         for($i =0; $i<$cpt;$i++){
-                         echo "<a href='#'>" . $categories[$i]['cuisine'] . "</a>";
+                         echo "<a href='#'>" . $categories[$i]->getCuisine() . "</a>";
                         }?>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace utils\render;
+use model\Restaurant;
 
 class Restaurant_render extends Render {
 
@@ -33,6 +34,14 @@ class Restaurant_render extends Render {
         }
         echo "</article>";
     }
-}
 
-?>
+    function lastestRestaurant(): void {
+        $restaurant = $this->objects[0];
+        echo "<div class='restaurant-card'>";
+        echo "<img src='". $restaurant->getPhotos() . "' alt='img_restaurant'>";
+        echo "<div class='restaurant-info'>";
+        echo "<h3>" . $restaurant->getNom() . "</h3>";
+        echo "<p>Orléans</p>";
+        echo "</div></div>";
+}
+}
