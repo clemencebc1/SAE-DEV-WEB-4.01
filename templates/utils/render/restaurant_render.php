@@ -35,13 +35,17 @@ class Restaurant_render extends Render {
         echo "</article>";
     }
 
-    function lastestRestaurant(): void {
-        $restaurant = $this->objects[0];
+    function iconRestaurant(): void {
+        if (empty($this->objects)){
+            echo "<p>Vous n'avez pas encore testé de restaurant</p>";
+        }
+        else {
+        foreach($this->objects as $restaurant){;
         echo "<div class='restaurant-card'>";
         echo "<img src='". $restaurant->getPhotos() . "' alt='img_restaurant'>";
         echo "<div class='restaurant-info'>";
         echo "<h3>" . $restaurant->getNom() . "</h3>";
         echo "<p>Orléans</p>";
-        echo "</div></div>";
+        echo "</div></div>";}}
 }
 }

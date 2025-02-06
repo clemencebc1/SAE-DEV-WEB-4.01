@@ -260,7 +260,7 @@ class DBConnector {
     }
 
     public static function getFavorisByUser($user): array {
-        $query = self::getInstance()->prepare('Select * from public."aimer" natural join public."Restaurant" where mail=:user');
+        $query = self::getInstance()->prepare('Select * from public."aimer" natural join public."Restaurant" natural left join public."Photo" where mail=:user');
         $query->execute(['user' => $user]);
         $result = $query->fetchAll();
         $all_restaurants = [];
@@ -277,7 +277,6 @@ class DBConnector {
                 self::getTypeCuisineById($restaurant['cuisine']));
         }
         return $all_restaurants;
-
     }
 
 }

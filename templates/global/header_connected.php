@@ -64,15 +64,19 @@ body {
 .logout:hover {
     opacity: 0.8;
 }
+#home a {
+    color:black;
+    text-decoration: none;
+}
 </style>
 
 <header class="header">
         <div class="logo">
             <img src="../img/logo.png" alt="Logo IUTables’O">
-            <span>IUTables’O</span>
+            <span id="home"><a href="index_connected.php"">IUTables’O</a></span>
         </div>
         <nav class="nav">
-            <a href="#">Favoris</a>
+            <a href="favoris.php">Favoris</a>
             <a href="mescritiques.php">Mes Critiques</a>
             <a href="#">Contact</a>
         </nav>
