@@ -27,7 +27,7 @@ link_to_css('static/index_connected.css');
         <div class="container">
         <div class="last-review">
             <h2>Vous avez testé récemment ? <a href="#">Laissez un avis !</a></h2>
-            <?php $dernier_restau_render->iconRestaurant(); ?>
+            <?php $dernier_restau_render->iconRestaurant(false);?>
         </div>
 
         <div class="search-section">

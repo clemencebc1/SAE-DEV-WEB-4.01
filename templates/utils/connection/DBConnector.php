@@ -279,5 +279,11 @@ class DBConnector {
         return $all_restaurants;
     }
 
+    public static function deleteFavoris($user, $id_resto): bool {
+        $query = self::getInstance()->prepare('DELETE FROM public."aimer" WHERE mail=:user AND id_resto=:id');
+        $result = $query->execute(['user' => $user, 'id' => $id_resto]);
+        return $result;
+    }
+
 }
 ?>

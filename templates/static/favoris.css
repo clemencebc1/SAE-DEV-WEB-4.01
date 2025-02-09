@@ -1,13 +1,19 @@
 
+#vide {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+
+}
+
 .restaurant-card {
     position: relative;
     margin: 2%;
-    width: 70%;
     overflow: hidden;
 }
 
 .restaurant-card img {
-    width: 50%;
+    width: 70%;
     height: auto;
     display: block;
     border-radius: 10px;
@@ -31,4 +37,21 @@ h3 {
     display: flex;
     flex-wrap: nowrap;
     margin-top: 20px;
+}
+.coeur {
+    display:flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+/* généré avec CHATGPT*/
+.svg-heart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.svg-heart-btn:hover {
+    transform: scale(1.2);
 }

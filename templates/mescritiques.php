@@ -25,7 +25,7 @@ link_to_css('static/index_connected.css');
             $render = new CritiqueRender($critiques);
             $render->render();
             ?>
-
+        
         </main>
 
         <?php include('global/footer.php'); ?>
