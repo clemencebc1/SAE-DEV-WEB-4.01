@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace model;
-use model\Departement;
-use model\TypeCuisine;
+namespace classes\model;
+use classes\model\Departement;
+use classes\model\TypeCuisine;
 class Restaurant {
     private int $id;
     private string $nom;

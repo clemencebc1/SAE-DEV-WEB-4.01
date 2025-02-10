@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace utils\connection;
 use \PDO;
 use \Exception;
-use model\Restaurant;
-use model\Departement;
-use model\TypeCuisine;
+use classes\model\Restaurant;
+use classes\model\Departement;
+use classes\model\TypeCuisine;
 
 class DBConnector {
     private $pdo;

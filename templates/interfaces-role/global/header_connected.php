@@ -69,20 +69,28 @@ body {
     text-decoration: none;
 }
 </style>
-
+<?php 
+use utils\connection\UserTools;?>
 <header class="header">
         <div class="logo">
             <img src="../img/logo.png" alt="Logo IUTables’O">
             <span id="home"><a href="index_connected.php"">IUTables’O</a></span>
         </div>
         <nav class="nav">
+            <?php if (UserTools::isAdmin()) {?>
+                <a href="avis-admin.php">Avis</a>
+                <a href="ajout-json.php">Restaurants</a>
+            <?php } ?>
+            <?php if (UserTools::isVisiteur()) {?>
+                
             <a href="favoris.php">Favoris</a>
             <a href="mescritiques.php">Mes Critiques</a>
             <a href="#">Contact</a>
+            <?php } ?>
         </nav>
         <div class="icons">
-            <img src="../img/home-icon.png" alt="Accueil"><a href="#"></a>
-            <img src="../img/user-icon.png" alt="Profil"><a href="#"></a>
+            <a href="#"><img src="../img/home-icon.png" alt="Accueil"></a>
+            <a href="profil.php"><img src="../img/user-icon.png" alt="Profil"></a>
             <button class="logout"><a href="utils/connection/logout.php">Se déconnecter</a></button>
         </div>
 </header>

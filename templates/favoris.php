@@ -14,12 +14,12 @@ $favoris_render = new Restaurant_render($favoris);
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include('global/head.php'); 
+include('interfaces-role/global/head.php'); 
 title_html('Favoris');
 link_to_css('static/favoris.css');
 ?>
 <body>
-<?php include('global/header_connected.php'); ?>
+<?php include('interfaces-role/global/header_connected.php'); ?>
     <main>
         <div id="restaurants-favoris">
             <?php $favoris_render->iconRestaurant(true)?>
@@ -29,6 +29,6 @@ link_to_css('static/favoris.css');
 
         
     </main>
-<?php include('global/footer.php'); ?>
+<?php include('interfaces-role/global/footer.php'); ?>
 </body>
 </html>

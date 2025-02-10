@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace utils\render;
-use model\Restaurant;
+use classes\model\Restaurant;
 
 class Restaurant_render extends Render {
 

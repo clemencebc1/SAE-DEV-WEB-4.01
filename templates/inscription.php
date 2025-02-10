@@ -5,7 +5,7 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
-include('global/head.php'); 
+include('interfaces-role/global/head.php'); 
 title_html('Inscription');
 link_to_css('static/inscription.css');
 if (!empty($_POST)){
@@ -13,7 +13,7 @@ if (!empty($_POST)){
 }
 ?>
 <body>
-    <?php include('global/header.php'); ?>
+    <?php include('interfaces-role/global/header_connected.php'); ?>
     <main>
         <section class="form-section">
             <div class="form-container">
@@ -46,6 +46,6 @@ if (!empty($_POST)){
             </div>
         </section>
     </main>
-    <?php include('global/footer.php'); ?>
+    <?php include('interfaces-role/global/footer.php'); ?>
 </body>
 </html>

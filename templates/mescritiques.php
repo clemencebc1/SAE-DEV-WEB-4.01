@@ -16,7 +16,7 @@ title_html('Connected');
 link_to_css('static/index_connected.css');
 ?>
 <body>
-        <?php include('global/header_connected.php'); ?>
+        <?php include('interfaces-role/global/header_connected.php'); ?>
         <main>
             <h1>Vos dernières critiques gastronomiques</h1>
             <?php
@@ -28,6 +28,6 @@ link_to_css('static/index_connected.css');
         
         </main>
 
-        <?php include('global/footer.php'); ?>
+        <?php include('interfaces-role/global/footer.php'); ?>
     </body>
 </html>
