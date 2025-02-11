@@ -92,5 +92,14 @@ class UserTools {
     public static function getUserRole(): mixed {
         return $_SESSION['user']['role'];
     }
+    public static function isVisiteur(): bool {
+        return $_SESSION['user']['role'] === 'visiteur';
+    }
+    public static function isRestaurateur(): bool {
+        return $_SESSION['user']['role'] === 'restaurateur';
+    }
+    public static function isAdmin(): bool {
+        return $_SESSION['user']['role'] === 'admin';
+}
 }
 ?>

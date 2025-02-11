@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace model;
-use model\Departement;
-use model\TypeCuisine;
+namespace classes\model;
+use classes\model\Departement;
+use classes\model\TypeCuisine;
 class Restaurant {
     private int $id;
     private string $nom;
@@ -12,8 +12,9 @@ class Restaurant {
     private int $nbetoile;
     private TypeCuisine $type_cuisine;
     private Departement $dep;
+    private mixed $photos;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, TypeCuisine $type_cuisine, Departement $departement){
+    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, Departement $departement, mixed $url, TypeCuisine $type_cuisine){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;
@@ -22,6 +23,7 @@ class Restaurant {
         $this->nbetoile = $nbetoile;
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
+        $this->photos = $url;
     }
 
     public function getNom(): string {
@@ -42,7 +44,7 @@ class Restaurant {
     public function getNbEtoile(): int {
         return $this->nbetoile;
     }
-    public function getTypeCuisine(): string {
+    public function getTypeCuisine(): TypeCuisine {
         return $this->type_cuisine;
     }
     public function getDepartement(): Departement {
@@ -52,10 +54,14 @@ class Restaurant {
     public function getRegion(): string {
         return $this->dep->getNomdep();
     }  
+    public function getPhotos(): mixed {
+        return $this->photos;
+    }
 
     public function __toString(): string {
         return $this->nom;
     }
+
 
     public function equals(Restaurant $restaurant): bool {
         return $this->id === $restaurant->getId();

@@ -4,9 +4,9 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBconnector;
 use utils\connection\UserTools;
-use model\Departement;
-use model\Restaurant;
-use model\Critique;
+use classes\model\Departement;
+use classes\model\Restaurant;
+use classes\model\Critique;
 use utils\render\Restaurant_render;
 
 

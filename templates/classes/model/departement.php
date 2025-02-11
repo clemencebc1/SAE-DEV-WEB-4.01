@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace model;
+namespace classes\model;
 
 class Departement {
     private int $id;

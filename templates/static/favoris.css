@@ -1,0 +1,57 @@
+
+#vide {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+.restaurant-card {
+    position: relative;
+    margin: 2%;
+    overflow: hidden;
+}
+
+.restaurant-card img {
+    width: 70%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.restaurant-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+h3 {
+    margin-left: 2%;
+}
+#enregistrer {
+    color: #477eae;;
+}
+#restaurants-favoris {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+}
+.coeur {
+    display:flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+/* généré avec CHATGPT*/
+.svg-heart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.svg-heart-btn:hover {
+    transform: scale(1.2);
+}

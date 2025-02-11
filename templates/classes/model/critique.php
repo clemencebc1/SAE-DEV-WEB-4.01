@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace model;
-use model\Restaurant;
-use model\User;
+namespace classes\model;
+use classes\model\Restaurant;
+use classes\model\User;
 
 class Critique {
     private int $id;
