@@ -2,17 +2,18 @@
 declare(strict_types=1);
 namespace model;
 use model\Departement;
+use model\TypeCuisine;
 class Restaurant {
     private int $id;
     private string $nom;
     private string $adresse;
     private string $website;
-    private int $capactiy;
+    private int $capacity;
     private int $nbetoile;
-    private array $type_cuisine;
+    private TypeCuisine $type_cuisine;
     private Departement $dep;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, array $type_cuisine, Departement $departement){
+    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, TypeCuisine $type_cuisine, Departement $departement){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;
@@ -41,13 +42,24 @@ class Restaurant {
     public function getNbEtoile(): int {
         return $this->nbetoile;
     }
-    public function getTypeCuisine(): array {
+    public function getTypeCuisine(): string {
         return $this->type_cuisine;
     }
     public function getDepartement(): Departement {
         return $this->dep;
     }
 
+    public function getRegion(): string {
+        return $this->dep->getNomdep();
+    }  
+
+    public function __toString(): string {
+        return $this->nom;
+    }
+
+    public function equals(Restaurant $restaurant): bool {
+        return $this->id === $restaurant->getId();
+    }
 
 }
 
