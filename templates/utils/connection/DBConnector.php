@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace utils\connection;
 use \PDO;
 use \Exception;
-use classes\model\Restaurant;
-use classes\model\Departement;
+use classes\model\restaurant;
+use classes\model\departement;
 use classes\model\TypeCuisine;
 
 class DBConnector {
@@ -125,8 +125,11 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE id_resto = :idR');
         $query->execute(array('idR' => $id));
         $result = $query->fetch();
+        if (!$result) {
+            return null;
+        }
         $restaurant = new Restaurant(
-            $result['id_resto'], 
+            $result['id'], 
             $result['nom'], 
             $result['adresse'], 
             $result['website'], 

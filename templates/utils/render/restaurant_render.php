@@ -1,7 +1,11 @@
 <?php
 declare(strict_types=1);
 namespace utils\render;
-use classes\model\Restaurant;
+require_once 'autoloader.php';
+
+use utils\render\render;
+use classes\model\restaurant;
+use utils\connection\DBConnector;
 
 class Restaurant_render extends Render {
 
@@ -9,7 +13,7 @@ class Restaurant_render extends Render {
         parent::__construct($restaurants);
     }
     function render(): void{
-        $restaurant = $_GET['id_restaurant'];
+        $restaurant = $restaurants[0];
         echo"<section class='titre'>";
             echo"<h1>Détails du restaurant ". $restaurant->getNom() ."</h1>";
         echo"</section>";
@@ -23,11 +27,12 @@ class Restaurant_render extends Render {
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
                     echo"<p>Adresse :". $restaurant->getAdresse() ."</p>";
-                    echo"<p>Origine :". $restaurant->getOrigine() ." </p>";
-                    echo"<p>Inclus :". $restaurant->getInclus() ."</p>";
-                    echo"<p>Horaire :". $restaurant->getHoraire(). "</p>";
-                    echo"<p>Email :". $restaurant->getEmail() ."</p>";
-                    echo"<p>Numéro :". $restaurant->getNumero() ."</p>";
+                    echo"<p>Type de cuisine :". $restaurant->getTypeCuisine() ." </p>";
+                    echo"<p>Inclus :"</p>";
+                    echo"<p>Horaire :"</p>";
+                    echo"<p>Site web :"</p>";
+                    echo"<p>Email :"</p>";
+                    echo"<p>Numéro :"</p>";
                 echo"</div>";
                 echo"<div>";
                     echo"<a href=''>Inscrivez vous dès maintenant pour voir les avis de ce restaurant !</a>";
