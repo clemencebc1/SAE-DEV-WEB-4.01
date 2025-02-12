@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace model;
+namespace classes\model;
 
 class User {
     private string $mail;
@@ -8,12 +8,14 @@ class User {
     private string $nom;
     private string $prenom;
     private string $role;
-    function __construct(string $mail, string $password, string $nom, string $prenom, string $role){
+    private array $tester;
+    function __construct(string $mail, string $password, string $nom, string $prenom, string $role, array $tester){
         $this->mail =$mail;
         $this->password = $password;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->role = $role;
+        $this->tester = $tester;
     }
 
     function getMail(): string {
@@ -27,6 +29,9 @@ class User {
     }
     function getRole():string {
         return $this->role;
+    }
+    function getTester(): array {
+        return $this->tester;
     }
 }
 ?>
