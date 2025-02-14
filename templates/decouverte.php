@@ -26,12 +26,12 @@ $render = new Restaurant_render($restaurants);
 <!DOCTYPE html>
 <html lang="fr">
 <?php 
-include 'global/head.php'; 
+include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
-// link_to_css('static/connexion.css');
+
 ?>
 <body>
-    <?php include('global/header.php') ?>
+    <?php include('interfaces-role/global/header.php') ?>
     <main>
         <section>
             <div class="titles-container">
