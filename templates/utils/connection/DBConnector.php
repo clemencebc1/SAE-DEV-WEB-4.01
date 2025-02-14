@@ -1,11 +1,13 @@
 <?php
 declare(strict_types=1);
 namespace utils\connection;
+use classes\model\Critique;
 use \PDO;
 use \Exception;
 use classes\model\Restaurant;
 use classes\model\Departement;
 use classes\model\TypeCuisine;
+use classes\model\User;
 
 class DBConnector {
     private $pdo;
@@ -57,7 +59,15 @@ class DBConnector {
         return $result;
     }
 
-        
+    /**
+     * inscrit un nouveau visiteur
+     * @param mixed $username mail
+     * @param mixed $password mot de passe en clair
+     * @param mixed $nom nom visiteur
+     * @param mixed $prenom prenom visiteur
+     * @param mixed $visiteur role
+     * @return bool true si inscrit sinon false (existe deja ou erreur)
+     */
     public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
         $hash = hash('sha1', $password);
         $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
@@ -252,13 +262,31 @@ class DBConnector {
         return $restaurant;
     }
 
+    /**
+     * Récupère les critiques d'un utilisateur.
+     * @param string $user L'adresse mail de l'utilisateur.
+     * @return array Les critiques de l'utilisateur.
+     */
     public static function getCritiquesByUser($user): array {
-        $query = self::getInstance()->prepare('SELECT nom, id_resto, message, date_test, id_critique FROM public."Critique" natural join public."Restaurant" WHERE mail_user=:user ORDER BY date_test DESC');
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, message, date_test, id_critique, etoiles FROM public."Critique" natural join public."Restaurant" WHERE mail_user=:user ORDER BY date_test DESC');
         $query->execute(['user' => $user]);
         $result = $query->fetchAll();
         return $result;
     }
 
+    public static function getCritique($id_critique): Critique{
+        $query = self::getInstance()->prepare('SELECT * FROM public."Critique" WHERE id_critique=:id');
+        $query->execute(['id' => $id_critique]);
+        $result = $query->fetch();
+        $critique = new Critique($result['id_critique'], $result['message'], new Restaurant($result['id_resto'],'', '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User('', '', '', '', '', array()), $result['date_test'], $result['etoiles']);
+        return $critique;
+    }
+
+    /** 
+    * Récupère les favoris d'un utilisateur.
+    * @param string $user L'adresse mail de l'utilisateur.
+    * @return array Les favoris de l'utilisateur.
+    */
     public static function getFavorisByUser($user): array {
         $query = self::getInstance()->prepare('Select * from public."aimer" natural join public."Restaurant" natural left join public."Photo" where mail=:user');
         $query->execute(['user' => $user]);
@@ -279,9 +307,37 @@ class DBConnector {
         return $all_restaurants;
     }
 
+    /** 
+    * Supprime un restaurant favoris
+    * @param string $user L'adresse mail de l'utilisateur.
+    * @param int $id_resto L'identifiant du restaurant.
+    * @return bool true si la suppression a réussi, false sinon.
+    */
     public static function deleteFavoris($user, $id_resto): bool {
         $query = self::getInstance()->prepare('DELETE FROM public."aimer" WHERE mail=:user AND id_resto=:id');
         $result = $query->execute(['user' => $user, 'id' => $id_resto]);
+        return $result;
+    }
+
+    /**  supprime une critique
+    * @param int $id_critique L'identifiant de la critique.
+    * @return bool true si la suppression a réussi, false sinon.
+    */
+    public static function deleteCritique($id_critique): bool {
+        $query = self::getInstance()->prepare('DELETE FROM public."Critique" WHERE id_critique=:id');
+        $result = $query->execute(['id' => $id_critique]);
+        return $result;
+    }
+
+    /** modifie une critique
+    * @param int $id_critique L'identifiant de la critique.
+    * @param string $message Le message de la critique.
+    * @param int $etoiles Le nombre d'étoiles de la critique.
+    * @return bool true si la modification a réussi, false sinon.
+    */
+    public static function modifyCritique($id_critique, $message, $etoiles): bool {
+        $query = self::getInstance()->prepare('UPDATE public."Critique" SET message=:message, etoiles=:etoiles WHERE id_critique=:id');
+        $result = $query->execute(['message' => $message, 'etoiles' => $etoiles, 'id' => $id_critique]);
         return $result;
     }
 

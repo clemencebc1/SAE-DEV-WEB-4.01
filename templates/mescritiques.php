@@ -11,17 +11,22 @@ UserTools::requireLogin();
 <!DOCTYPE html>
 <html lang="fr">
 <?php
-include('global/head.php'); 
-title_html('Connected');
-link_to_css('static/index_connected.css');
+include('interfaces-role/global/head.php'); 
+title_html('Mes critiques');
+link_to_css('static/mescritiques.css');
 ?>
 <body>
         <?php include('interfaces-role/global/header_connected.php'); ?>
         <main>
             <h1>Vos dernières critiques gastronomiques</h1>
+            
             <?php
+            if (isset($_GET['success'])) {
+                echo "<p style='color: green;'>Critique supprimée avec succès !</p>";
+            } elseif (isset($_GET['error'])) {
+                echo "<p style='color: red;'>Erreur lors de la suppression.</p>";
+            }
             $critiques = DBConnector::getCritiquesByUser($_SESSION['user']['username']);
-            var_dump(($critiques));
             $render = new CritiqueRender($critiques);
             $render->render();
             ?>
