@@ -21,6 +21,9 @@ class User {
     function getMail(): string {
         return $this->mail;
     }
+    function getPassword(): string {
+        return $this->password;
+    }
     function getNom(): string {
         return $this->nom;
     }

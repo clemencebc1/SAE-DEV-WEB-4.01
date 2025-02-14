@@ -76,6 +76,32 @@ class DBConnector {
     }
 
     /**
+     * Recupere un utilisateur
+     * @param string $username L'adresse mail de l'utilisateur.
+     * @param string $nom Le nom de l'utilisateur.
+     * @param string $prenom Le prénom de l'utilisateur.
+     * @param string $password Le mot de passe de l'utilisateur.
+     * @return User l'utilisateur
+     */
+    public static function getUser($username): User {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username');
+        $query->execute(array('username' => $username));
+        $result = $query->fetch();
+        $user = new User($result['mail'], $result['password'], $result['nom'], $result['prenom'], $result['role'], array());
+        return $user;
+    }
+
+    public static function updateUser($username, $nom, $prenom, $password): bool {
+        $user = DBConnector::getUser($username);
+        if ($user->getPassword() == $password) {
+            $hash = $user->getPassword();
+        }
+        $query = self::getInstance()->prepare('UPDATE public."Visiteur" SET NOM=:nom, PRENOM=:prenom, PASSWORD=:password WHERE MAIL=:username');
+        $result = $query->execute(array('nom' => $nom, 'prenom' => $prenom, 'password' => $hash, 'username' => $username));
+        return $result;
+    }
+
+    /**
      * Récupère le département par son identifiant.
      * @param int $id L'identifiant du département.
      * @return Departement Le département.
