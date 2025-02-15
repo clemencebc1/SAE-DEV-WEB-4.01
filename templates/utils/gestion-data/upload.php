@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
             echo "Le fichier " . htmlspecialchars(basename($_FILES["file"]["name"])) . " a été téléchargé avec succès.";
             $loader = new DataLoaderJson($targetFile);
-            $loader->insertData(DBConnector::getInstance());
+            $loader->insertData();
             redirect('../../ajout-json.php?upload=success');
         } else {
             redirect('../../ajout-json.php?upload=error');

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace utils\connection;
+use classes\model\Caracteristique;
 use classes\model\Critique;
 use \PDO;
 use \Exception;
@@ -118,14 +119,46 @@ class DBConnector {
     /**
      * Récupère le type de cuisine par son identifiant.
      * @param int $id L'identifiant du type de cuisine.
-     * @return string Le type de cuisine.
+     * @return mixed Le type de cuisine.
      */
-    public static function getTypeCuisineById($id): TypeCuisine {
+    public static function getTypeCuisineById($id): mixed {
         $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE id = :idT');
         $query->execute(array('idT' => $id));
         $result = $query->fetch();
         $typeCuisine = new TypeCuisine($result['id'], $result['cuisine']);
         return $typeCuisine;
+    }
+
+    /**
+     * recupère le type de cuisine par son nom
+     * @param mixed $name nom de la cuisine
+     * @return mixed objet type cuisine
+     */
+    public static function getTypeCuisineByName($name): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE cuisine = :name');
+        $query->execute(array('name' => $name));
+        $result = $query->fetch();
+        if ($result){
+            $typeCuisine = new TypeCuisine($result['id'], $result['cuisine']);
+        }
+        $typeCuisine = null;
+        return $typeCuisine;
+    }
+
+    /**
+     * recupere la caracteristique par son nom
+     * @param mixed $name nom de la caracteristique
+     * @return mixed objet caracteristique
+     */
+    public static function getCaracteristiqueByName($name): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Caractéristique" WHERE carac = :name');
+        $query->execute(array('name' => $name));
+        $result = $query->fetch();
+        if ($result){
+            $caracteristique = new Caracteristique($result['id'], $result['nom']);
+            return $caracteristique;
+        }
+        return null;
     }
 
     /**
@@ -157,7 +190,7 @@ class DBConnector {
      * @param int $id L'identifiant du restaurant.
      * @return Restaurant Le restaurant.
      */
-    public static function getRestaurantById($id) {
+    public static function getRestaurantById($id): Restaurant {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" WHERE id_resto = :idR');
         $query->execute(array('idR' => $id));
         $result = $query->fetch();
@@ -172,6 +205,31 @@ class DBConnector {
             $result['url'],
             self::getTypeCuisineById($result['cuisine']));
         return $restaurant;
+    }
+
+    /**
+     * recupere le restaurant par son nom
+     * @param mixed $name nom du restaurant
+     * @return mixed objet restaurant
+     */
+    public static function getRestaurantByName($nom): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural join public."Photo" WHERE nom = :nom');
+        $query->execute(array('nom' => $nom));
+        $result = $query->fetch();
+        if ($result){
+            $restaurant = new Restaurant(
+                $result['id_resto'], 
+                $result['nom'], 
+                $result['adresse'], 
+                $result['website'], 
+                $result['capacity'], 
+                $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
+                self::getDepartementById($result['region_id']),
+                $result['url'],
+                self::getTypeCuisineById($result['cuisine']));
+                return $restaurant;
+        } 
+        return null;
     }
 
     /**
@@ -255,6 +313,10 @@ class DBConnector {
         return $all_restaurants;
     }    
     
+    /**
+     * recupere tous les types de cuisine
+     * @return TypeCuisine[] tableau de type de cuisine
+     */
     public static function getAllType(): array {
         $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine"');
         $query->execute();
@@ -366,6 +428,37 @@ class DBConnector {
         $result = $query->execute(['message' => $message, 'etoiles' => $etoiles, 'id' => $id_critique]);
         return $result;
     }
+
+   /**
+    * ajoute un restaurant à la base de donées
+    * @param mixed $name nom du restaurant
+    * @param mixed $capacity capacité du restaurant
+    * @param mixed $tel numéro de téléphone
+    * @param mixed $siret numéro siret
+    * @param mixed $website site web
+    * @param mixed $typesCuisine type de cuisine
+    * @param mixed $region région
+    * @param mixed $etoiles nombre d'étoiles
+    * @param mixed $horaires horaires
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires): bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires)');
+    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires));
+    return $result;
+   }
+
+   /**
+    * insertions des carac d'un restaurants dans la db
+    * @param mixed $id_resto id du resto
+    * @param mixed $id_carac id de la carac
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function insertCaracteriserRestaurant($id_resto, $id_carac): bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."Caracteriser" (id_carac, id_resto) VALUES (:id_carac, :id_resto)');
+    $result = $query->execute(array('id_carac' => $id_carac, 'id_resto' => $id_resto));
+    return $result;
+   }
 
 }
 ?>
