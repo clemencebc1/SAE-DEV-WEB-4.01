@@ -47,36 +47,17 @@ final class DataLoaderJson implements DataLoaderInterface {
     public function addCarac($resto){
         $caracteristiques = ['wheelchair', 'vegetarian', 'vegan', 'delivery', 'takeaway', 'internet_access', 'stars', 'smoking'];
         foreach ($caracteristiques as $carac){
-            $nameCarac = null;
-            switch ($carac){
-                case 'wheelchair':
-                    if ($resto[$carac] == 'true'){
-                        $nameCarac = 'wheelchair';
-                    }
-                    break;
-                case 'vegetarian':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'vegan':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'delivery':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'takeaway':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'internet_access':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'stars':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
-                case 'smoking':
-                    $nameCarac = $resto[$carac] ?? null ;
-                    break;
+            $nameCarac = false;
+            if ($carac == 'wheelchair'){
+                if ($resto[$carac] != 'no'){
+                    $nameCarac = 'wheelchair';
+                }
             }
-            if (isset($nameCarac)){
+            else {
+                $nameCarac = $resto[$carac] == 'yes' ? $carac : null;
+            }
+               
+            if ($nameCarac){
                 $idCarac = $this->caracByName($nameCarac);
                 $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
                 DBConnector::insertCaracteriserRestaurant($idResto, $idCarac);
