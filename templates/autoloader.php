@@ -14,5 +14,23 @@ class Autoloader {
             throw new Exception("Failed opening required '$file'"); //debug au cas ou l autoload ne fonctionne pas
         }
     }
+
+
+    /**
+     * permet aux tests de charger les classes
+     * @return void
+     */
+    static function register_test(): void {
+        spl_autoload_register(array(__CLASS__, 'autoload_test'));
+    }
+    static function autoload_test($class){
+        $class = str_replace('\\', '/', $class);
+        $file =  __DIR__ . "/../templates/" . $class . '.php'; 
+        if (file_exists($file)) {
+            require $file;
+        } else {
+            throw new Exception("Failed opening required '$file'"); 
+        }
+    }
 }
 ?>

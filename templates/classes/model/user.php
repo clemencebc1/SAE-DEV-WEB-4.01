@@ -18,21 +18,50 @@ class User {
         $this->tester = $tester;
     }
 
+    /**
+     * Get le mail user
+     * @return string
+     */
     function getMail(): string {
         return $this->mail;
     }
+
+    /**
+     * Get le password user
+     * @return string
+     */
     function getPassword(): string {
         return $this->password;
     }
+
+    /**
+     * Get le nom user
+     * @return string
+     */
     function getNom(): string {
         return $this->nom;
     }
+
+    /**
+     * Get le prenom user
+     * @return string
+     */
     function getPrenom():string{
         return $this->prenom;
     }
+
+    /**
+     * Get le role user
+     * @return string
+     */
     function getRole():string {
         return $this->role;
     }
+
+    /**
+     * Get les restaurants testes par l'utilisateur
+     * @return array
+     */
     function getTester(): array {
         return $this->tester;
     }

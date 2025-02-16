@@ -9,9 +9,19 @@ class Caracteristique {
         $this->caracteristique = $caracteristique;
         $this->id_carac = $id_carac;
     }
+
+    /**
+     * Get la valeur id_carac
+     * @return int
+     */
     function getId():int{
         return $this->id_carac;
     }
+
+    /**
+     * Get la valeur caracteristique
+     * @return string
+     */
     function getMessage(): string{
         return $this->caracteristique;
     }

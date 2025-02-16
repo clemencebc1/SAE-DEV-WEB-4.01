@@ -1,5 +1,5 @@
 <?php
-use model\Departement;
+use classes\model\Departement;
 use PHPUnit\Framework\TestCase;
 require_once 'vendor/autoload.php';
 
