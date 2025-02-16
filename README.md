@@ -16,10 +16,10 @@ En ce qui concerne les tests :
 - installer PHPUnit via Composer [https://phpunit.de/getting-started/phpunit-9.html]
 
 ## Lancer les tests
-Pour lancer les tests, vous devez (après avoir installer les dépendances nécessaires) : 
+Pour lancer les tests, vous devez : 
 - se rendre à la racine du projet
 - lancer les tests avec ``` ./vendor/bin/phpunit tests ```
-- voir quels methodes passent ```./vendor/bin/phpunit --testdox tests```
+- voir quelles methodes passent ```./vendor/bin/phpunit --testdox tests```
 - voir la couverture ```vendor/bin/phpunit --coverage-text --coverage-filter=templates/classes/model```
 
 ### Si vous obtenez une erreur
