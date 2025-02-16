@@ -1,8 +1,8 @@
-# SAE-DEV-WEB-4.01
+# SAE 4.01 IUTables'O
 Groupe : Naima Akhtar *TD1*, Clémence Bocquet *TD2*, Nathan Randriantsoa *TD2*, Ophélie Valin *TD1*
 
 ## Introduction
-IUTables'O recense des restaurants et les différents avis de leurs clients.
+IUTables'O recense des restaurants d'Orléans et les différents avis de leurs clients. 
 
 ## Requirements
 Pour lancer le projet, vous devez :
