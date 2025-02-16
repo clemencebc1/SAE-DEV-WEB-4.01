@@ -1,5 +1,4 @@
 /vendor
-composer.*
-phpunit.xml
+composer.lock
 .phpunit.result.cache
 .DS_Store
