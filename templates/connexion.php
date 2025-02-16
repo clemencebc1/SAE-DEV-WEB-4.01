@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once 'utils/autoloader.php';
+require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\UserTools;
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
     $login = UserTools::login($_POST['email'], $_POST['password']);
     if ($login == true) {
-        header('Location: ../index_connected.php');
+        header('Location: index_connected.php');
     } else {
         header('Location: connexion.php?error=1');
     }
@@ -19,12 +19,12 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 <!DOCTYPE html>
 <html lang="fr">
 <?php 
-include 'global/head.php'; 
+include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
 link_to_css('static/connexion.css');
 ?>
 <body>
-    <?php include('global/header.php') ?>
+    <?php include('interfaces-role/global/header.php') ?>
     <main>
         <section id="login">
             <div class="form-section">
@@ -58,6 +58,6 @@ link_to_css('static/connexion.css');
             </div>
         </section>
     </main>
-    
+    <?php include('interfaces-role/global/footer.php') ?>
 </body>
 </html>

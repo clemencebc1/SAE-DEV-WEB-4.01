@@ -40,7 +40,7 @@ body {
 <header>
     <div class="logo">IUTables’O</div>
     <nav>
-      <a href="#">Découvrir</a>
+      <a href="decouverte.php">Découvrir</a>
       <a href="#">Avis</a>
       <a href="#">Contact</a>
       <button class="btn-connect"><a href="connexion.php">Se connecter</a></button>
