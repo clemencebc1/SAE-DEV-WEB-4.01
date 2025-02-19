@@ -170,7 +170,7 @@ class DBConnector {
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
     public static function getAllRestaurants(): array {
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo"');
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit 10');
         $query->execute();
         $result = $query->fetchAll();
         $all_restaurants = [];

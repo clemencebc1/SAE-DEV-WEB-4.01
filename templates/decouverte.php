@@ -28,6 +28,7 @@ $render = new Restaurant_render($restaurants);
 <?php 
 include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
+link_to_css('static/decouverte.css');
 // link_to_css('static/connexion.css');
 ?>
 <body>
