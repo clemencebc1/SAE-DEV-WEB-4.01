@@ -5,8 +5,8 @@ use classes\model\Caracteristique;
 use classes\model\Critique;
 use \PDO;
 use \Exception;
-use classes\model\Restaurant;
-use classes\model\Departement;
+use classes\model\restaurant;
+use classes\model\departement;
 use classes\model\TypeCuisine;
 use classes\model\User;
 
@@ -198,8 +198,11 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join WHERE id_resto = :idR');
         $query->execute(array('idR' => $id));
         $result = $query->fetch();
+        if (!$result) {
+            return null;
+        }
         $restaurant = new Restaurant(
-            $result['id_resto'], 
+            $result['id'], 
             $result['nom'], 
             $result['adresse'] ?? '', 
             $result['website'] ?? '', 

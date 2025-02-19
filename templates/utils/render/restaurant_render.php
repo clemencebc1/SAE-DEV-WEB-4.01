@@ -1,7 +1,11 @@
 <?php
 declare(strict_types=1);
 namespace utils\render;
-use classes\model\Restaurant;
+require_once 'autoloader.php';
+
+use utils\render\render;
+use classes\model\restaurant;
+use utils\connection\DBConnector;
 
 class Restaurant_render extends Render {
 
@@ -9,7 +13,32 @@ class Restaurant_render extends Render {
         parent::__construct($restaurants);
     }
     function render(): void{
-
+        $restaurant = $this->objects[0];
+        echo"<section class='titre'>";
+            echo"<h1>Détails du restaurant ". $restaurant->getNom() ."</h1>";
+        echo"</section>";
+        echo"<section>";
+            echo"<div class='image_nom'>";
+                echo"<div class='image'>";
+                echo"</div>";
+                echo"<div class='nom'>";
+                echo"</div>";
+            echo"</div>";
+            echo"<div class='details_lien'>";
+                echo"<div class='details'>";
+                    echo"<p>Adresse :". $restaurant->getAdresse() ."</p>";
+                    echo"<p>Type de cuisine :". $restaurant->getTypeCuisine() ." </p>";
+                    echo"<p>Inclus :". " </p>";
+                    echo"<p>Horaire : ". "</p>";
+                    echo"<p>Site web :". " </p>";
+                    echo"<p>Email : ". "</p>";
+                    echo"<p>Numéro :". "</p>";
+                echo"</div>";
+                echo"<div>";
+                    echo"<a href=''>Inscrivez vous dès maintenant pour voir les avis de ce restaurant !</a>";
+                echo"</div>";
+            echo"</div>";
+        echo"</section>";
     }
 
     function decouvrir(): void {
