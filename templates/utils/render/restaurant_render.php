@@ -28,11 +28,11 @@ class Restaurant_render extends Render {
                 echo"<div class='details'>";
                     echo"<p>Adresse :". $restaurant->getAdresse() ."</p>";
                     echo"<p>Type de cuisine :". $restaurant->getTypeCuisine() ." </p>";
-                    echo"<p>Inclus :</p>";
-                    echo"<p>Horaire :</p>";
-                    echo"<p>Site web :</p>";
-                    echo"<p>Email :</p>";
-                    echo"<p>Numéro :</p>";
+                    echo"<p>Inclus :". " </p>";
+                    echo"<p>Horaire : ". "</p>";
+                    echo"<p>Site web :". " </p>";
+                    echo"<p>Email : ". "</p>";
+                    echo"<p>Numéro :". "</p>";
                 echo"</div>";
                 echo"<div>";
                     echo"<a href=''>Inscrivez vous dès maintenant pour voir les avis de ce restaurant !</a>";
