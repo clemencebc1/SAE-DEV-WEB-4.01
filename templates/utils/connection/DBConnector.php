@@ -184,7 +184,7 @@ class DBConnector {
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
                 self::getDepartementById($restaurant['region_id']),
                 $restaurant['url'] ?? '',
-                self::getTypeCuisineById($restaurant['cuisine']));
+                self::getTypeCuisineById($restaurant['cuisine']) ?? new TypeCuisine(0, ''));
         }
         return $all_restaurants;
     }
@@ -234,6 +234,27 @@ class DBConnector {
                 return $restaurant;
         } 
         return null;
+    }
+
+
+    public static function getRestaurantByType($id_type){
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE cuisine = :idT');
+        $query->execute(array('idT' => $id_type));
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['cuisine']));
+        }
+        return $all_restaurants;
     }
 
     /**

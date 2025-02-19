@@ -15,6 +15,7 @@ UserTools::requireLogin();
 include('interfaces-role/global/head.php'); 
 title_html('Connected');
 link_to_css('static/index_connected.css');
+link_to_css('static/decouvrir.css');
 ?>
     <body>
         <?php include('interfaces-role/global/header_connected.php'); ?>
@@ -25,6 +26,9 @@ link_to_css('static/index_connected.css');
         if (UserTools::isAdmin()){
             include('interfaces-role/admin/index_connected.php');
         } ?>
+        <section id="container">
+            <?php include('decouvrir.php') ?>
+        </section>
     </main>
     <script>
             document.getElementById('search').addEventListener('input', function() {
