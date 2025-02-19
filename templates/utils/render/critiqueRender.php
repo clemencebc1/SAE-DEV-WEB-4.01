@@ -6,6 +6,11 @@ class CritiqueRender extends Render {
     function __construct(array $critiques){
         parent::__construct($critiques);
     }
+
+    /**
+     * affiche les critiques d'un utilisateur
+     * @return void
+     */
     function render(): void{
         echo "<div class='critique-container'>";
         foreach ($this->objects as $critique){
@@ -39,6 +44,12 @@ class CritiqueRender extends Render {
         }
         echo "</div>";
     }
+
+    /**
+     * affiche les boutons de gestion d'une critique user
+     * @param mixed $critique
+     * @return void
+     */
     function render_boutons($critique):void {
         // premier bouton supprimer
         echo "<form method='POST' action='utils/gestion-data/supprimer_critique.php' style='display:inline;'>";
@@ -57,6 +68,41 @@ class CritiqueRender extends Render {
         echo "<input type='hidden' name='id_resto' value='" . $critique['id_resto'] . "'>";
         echo "<button type='submit' class='seeResto-button'>Voir le restaurant</button>";
         echo "</form>";
+    }
+
+    /**
+     * affiche les critiques venant d'un restaurant
+     * @return void
+     */
+    function render_critiques_restaurant(): void{
+        echo "<div class='critique-container'>";
+        foreach ($this->objects as $critique){
+            echo "<div class='critique'>";
+            echo "<div>";
+            $end = false;
+            echo "<span class='stars'>";
+            for ($i = 0; $i<5;$i++){
+                if ($i>$critique->getNote()-1){
+                    $end=true;
+                    echo "</span>";
+                    break;
+                } else {
+                    echo "★";
+                }
+            }
+            if ($end){
+                echo "<span class='no-stars'>";
+                for ($i = 0; $i<5-$critique->getNote();$i++){
+                    echo "★";
+                }
+                echo "</span>";
+            }
+            echo "</div>";
+            echo "<h2>". $critique->getUser()->getPrenom() . " ". $critique->getUser()->getNom()." a testé " . $critique->getRestaurant()->getNom() ." le " . $critique->getDateTest() . "</h2>";
+            echo "<p>" . $critique->getMessage() . "</p>";
+            echo "</div>";
+        }
+        echo "</div>";
     }
 }
 

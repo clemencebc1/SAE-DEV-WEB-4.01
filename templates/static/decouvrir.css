@@ -28,9 +28,10 @@
     border-radius: 8px;
     margin: 10px 0;
 }
-.restaurant h2 {
+.restaurant h2 a {
     font-size: 22px;
     margin-bottom: 5px;
+    color: black;
 }
 .restaurant {
     background: #fff;

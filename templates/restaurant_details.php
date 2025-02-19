@@ -1,4 +1,7 @@
 <?php
+
+use utils\render\CritiqueRender;
+session_start();
 require_once 'autoloader.php';
 Autoloader::register();
 
@@ -15,7 +18,13 @@ use utils\connection\DBConnector;
 title_html('Détails');
 link_to_css('static/details.css');?>
 <body>
-    <?php include('interfaces-role/global/header.php'); ?>
+    <?php 
+    if (count($_SESSION)==0){
+        include('interfaces-role/global/header.php');
+     }
+     else {
+        include('interfaces-role/global/header_connected.php');
+     } ?>
     <main>
     <?php
     if (!isset($_GET['id']) || empty($_GET['id'])){
@@ -31,6 +40,12 @@ link_to_css('static/details.css');?>
 
     $restaurant_render = new Restaurant_render([$restaurant]);
     $restaurant_render->render();
+
+    if (count($_SESSION)>=1){
+        $critiques = DBConnector::getCritiqueByRestaurant(intval($_GET['id']));
+        $renderCritique = new CritiqueRender($critiques);
+        $renderCritique->render_critiques_restaurant();
+    }
     ?>
     </main>
     <?php include('interfaces-role/global/footer.php'); ?>

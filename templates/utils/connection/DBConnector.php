@@ -71,7 +71,7 @@ class DBConnector {
      */
     public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
         $hash = hash('sha1', $password);
-        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM_USER, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
         $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
         return $result;
     }
@@ -88,7 +88,7 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username');
         $query->execute(array('username' => $username));
         $result = $query->fetch();
-        $user = new User($result['mail'], $result['password'], $result['nom'], $result['prenom'], $result['role'], array());
+        $user = new User($result['mail'], $result['password'], $result['nom_user'], $result['prenom'], $result['role'], array());
         return $user;
     }
 
@@ -97,7 +97,7 @@ class DBConnector {
         if ($user->getPassword() == $password) {
             $hash = $user->getPassword();
         }
-        $query = self::getInstance()->prepare('UPDATE public."Visiteur" SET NOM=:nom, PRENOM=:prenom, PASSWORD=:password WHERE MAIL=:username');
+        $query = self::getInstance()->prepare('UPDATE public."Visiteur" SET NOM_USER=:nom, PRENOM=:prenom, PASSWORD=:password WHERE MAIL=:username');
         $result = $query->execute(array('nom' => $nom, 'prenom' => $prenom, 'password' => $hash, 'username' => $username));
         return $result;
     }
@@ -195,14 +195,14 @@ class DBConnector {
      * @return Restaurant Le restaurant.
      */
     public static function getRestaurantById($id): Restaurant {
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join WHERE id_resto = :idR');
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_resto = :idR');
         $query->execute(array('idR' => $id));
         $result = $query->fetch();
         if (!$result) {
             return null;
         }
         $restaurant = new Restaurant(
-            $result['id'], 
+            $result['id_resto'], 
             $result['nom'], 
             $result['adresse'] ?? '', 
             $result['website'] ?? '', 
@@ -390,12 +390,34 @@ class DBConnector {
         return $result;
     }
 
+    /**
+     * recupere une critique en fonction de son id
+     * @param mixed $id_critique
+     * @return Critique
+     */
     public static function getCritique($id_critique): Critique{
         $query = self::getInstance()->prepare('SELECT * FROM public."Critique" WHERE id_critique=:id');
         $query->execute(['id' => $id_critique]);
         $result = $query->fetch();
         $critique = new Critique($result['id_critique'], $result['message'], new Restaurant($result['id_resto'],'', '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User('', '', '', '', '', array()), $result['date_test'], $result['etoiles']);
         return $critique;
+    }
+
+
+    /**
+     * get les critiques en fonction du restaurant
+     * @param mixed $id_resto id restaurant
+     * @return Critique[] liste des critiques
+     */
+    public static function getCritiqueByRestaurant($id_resto): array{
+        $query = self::getInstance()->prepare('SELECT * from public."Critique" natural join public."Visiteur" natural join public."Restaurant" where public."Visiteur".mail=public."Critique".mail_user and id_resto=:id');
+        $query->execute(['id' => $id_resto]);
+        $result = $query->fetchAll();
+        $all_critiques = array();
+        foreach ($result as $critique) {
+            array_push($all_critiques,new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], '', '', array()), $critique['date_test'], $critique['etoiles']));
+        }
+        return $all_critiques;
     }
 
     /** 

@@ -26,16 +26,10 @@ class Restaurant_render extends Render {
             echo"</div>";
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
-                    echo"<p>Adresse :". $restaurant->getAdresse() ."</p>";
-                    echo"<p>Type de cuisine :". $restaurant->getTypeCuisine() ." </p>";
-                    echo"<p>Inclus :". " </p>";
-                    echo"<p>Horaire : ". "</p>";
-                    echo"<p>Site web :". " </p>";
-                    echo"<p>Email : ". "</p>";
-                    echo"<p>Numéro :". "</p>";
-                echo"</div>";
-                echo"<div>";
-                    echo"<a href=''>Inscrivez vous dès maintenant pour voir les avis de ce restaurant !</a>";
+                    echo"<p>Adresse : ". $restaurant->getAdresse() ."</p>";
+                    echo"<p>Type de cuisine : ". $restaurant->getTypeCuisine()->getCuisine() ." </p>";
+                    echo"<p>Inclus : ". " </p>";
+                    echo"<p>Site web : <a href='". $restaurant->getWebsite().  "'>". $restaurant->getNom(). "</a> </p>";
                 echo"</div>";
             echo"</div>";
         echo"</section>";
@@ -45,7 +39,7 @@ class Restaurant_render extends Render {
         echo "<article class='all-restaurants'>";
         foreach ($this->objects as $restaurant){
             echo "<div class='restaurant'>";
-            echo "<h3 class='nom'>" . $restaurant->getNom() . "</h3>";
+            echo "<h3 class='nom'><a href='restaurant_details.php?id=". $restaurant->getId() . "'>" . $restaurant->getNom() . "</a></h3>";
             $nbetoile = $restaurant->getNbEtoile();
             echo "<div class='etoiles'>";
             for ($i = 0; $i<5; $i++){
