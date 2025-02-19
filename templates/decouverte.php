@@ -19,14 +19,14 @@ if (!(empty($_GET["search"]))) {
     $restaurants = array_merge($byName, $byType, $byCity);
 }
 
-(empty($_GET["search"])) ? $restaurants = DBconnector::getAllRestaurants() : null;
+(empty($_GET["search"])) ?  $restaurants = DBconnector::getAllRestaurants() : null;
 $render = new Restaurant_render($restaurants);
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <?php 
-include 'global/head.php'; 
+include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
 // link_to_css('static/connexion.css');
 ?>
