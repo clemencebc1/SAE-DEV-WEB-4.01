@@ -5,16 +5,16 @@ use classes\model\Departement;
 use classes\model\TypeCuisine;
 class Restaurant {
     private int $id;
-    private string $nom;
-    private string $adresse;
-    private string $website;
-    private int $capacity;
-    private int $nbetoile;
-    private TypeCuisine $type_cuisine;
-    private Departement $dep;
+    private string | null $nom;
+    private string | null $adresse;
+    private string | null $website;
+    private int | null $capacity;
+    private int | null $nbetoile;
+    private TypeCuisine | null $type_cuisine;
+    private Departement | null $dep;
     private mixed $photos;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, Departement $departement, mixed $url, TypeCuisine $type_cuisine){
+    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, Departement | null $departement, mixed $url, TypeCuisine | null  $type_cuisine){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;

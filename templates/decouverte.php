@@ -9,8 +9,9 @@ use classes\model\Restaurant;
 use classes\model\Critique;
 use utils\render\Restaurant_render;
 
-
+$limit = 10;
 $restaurants = [];
+
 if (!(empty($_GET["search"]))) {
     $restaurants = [];
     $byType = DBconnector::searchRestaurantByType($_GET["search"]);
@@ -19,7 +20,17 @@ if (!(empty($_GET["search"]))) {
     $restaurants = array_merge($byName, $byType, $byCity);
 }
 
-(empty($_GET["search"])) ? $restaurants = DBconnector::getAllRestaurants() : null;
+// function nextLimit() {
+//     ($GET_["limit"]) ? $limit = $GET_["limit"] * 10 : $limit = 10;
+// }
+// (empty($GET_["inc"])) ? false : nextLimit();
+
+if (empty($_GET["search"])) {
+    $restaurants = DBconnector::getAllRestaurants(null);
+} else {
+    null;
+}  
+
 $render = new Restaurant_render($restaurants);
 ?>
 
@@ -28,7 +39,7 @@ $render = new Restaurant_render($restaurants);
 <?php 
 include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
-
+link_to_css('static/decouverte.css');
 ?>
 <body>
     <?php include('interfaces-role/global/header.php') ?>
@@ -54,16 +65,18 @@ title_html('Connexion');
         </section>
         <section>
             <?php
-            // $restaurants = Restaurant_render::renderAllRestaurants();
-            // $Dbrestaurants = DBconnector::getAllRestaurants();
-
-            // echo '<pre>';
-            // var_dump($restaurants);
-            // echo '</pre>';
             echo $render->decouvrir();
             ?>
         </section>
+        <section>
+            <!-- <div class="more">
+                <form action="GET">
+                    <input type="hidden" name="inc" value=>
+                </form>
+                <button type="submit" id="more-btn">Voir plus</button>
+            </div> -->
+        </section>
     </main>
-    
+    <?php include('interfaces-role/global/footer.php') ?>
 </body>
 </html>

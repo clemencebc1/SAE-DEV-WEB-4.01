@@ -169,9 +169,10 @@ class DBConnector {
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
-    public static function getAllRestaurants(): array {
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo"');
-        $query->execute();
+    public static function getAllRestaurants(int | null  $limit): array {
+        ($limit <  10 || $limit  == null ) ? $limit = 10 : false;
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+        $query->execute(array('limit' => $limit));
         $result = $query->fetchAll();
         $all_restaurants = [];
         foreach ($result as $restaurant) {
