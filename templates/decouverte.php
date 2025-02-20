@@ -29,10 +29,9 @@ $render = new Restaurant_render($restaurants);
 include 'interfaces-role/global/head.php'; 
 title_html('Connexion');
 link_to_css('static/decouverte.css');
-// link_to_css('static/connexion.css');
 ?>
 <body>
-    <?php include('global/header.php') ?>
+    <?php include('interfaces-role/global/header.php') ?>
     <main>
         <section>
             <div class="titles-container">
@@ -55,12 +54,6 @@ link_to_css('static/decouverte.css');
         </section>
         <section>
             <?php
-            // $restaurants = Restaurant_render::renderAllRestaurants();
-            // $Dbrestaurants = DBconnector::getAllRestaurants();
-
-            // echo '<pre>';
-            // var_dump($restaurants);
-            // echo '</pre>';
             echo $render->decouvrir();
             ?>
         </section>
