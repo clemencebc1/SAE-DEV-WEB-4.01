@@ -151,3 +151,13 @@
     font-weight: bold;
 }
 
+
+#decouverte {
+    text-align: center;
+}
+#decouverte a {
+    color: black;
+}
+#decouverte a:hover {
+    color: rgb(255, 183, 0);
+}

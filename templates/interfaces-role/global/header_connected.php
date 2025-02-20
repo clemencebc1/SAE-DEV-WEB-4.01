@@ -89,7 +89,7 @@ use utils\connection\UserTools;?>
             <?php } ?>
         </nav>
         <div class="icons">
-            <a href="#"><img src="../img/home-icon.png" alt="Accueil"></a>
+            <a href="index_connected.php"><img src="../img/home-icon.png" alt="Accueil"></a>
             <a href="profil.php"><img src="../img/user-icon.png" alt="Profil"></a>
             <button class="logout"><a href="utils/connection/logout.php">Se déconnecter</a></button>
         </div>

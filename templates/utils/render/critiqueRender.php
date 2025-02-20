@@ -64,8 +64,8 @@ class CritiqueRender extends Render {
         echo "</form>";
 
         // troisieme bouton voir le restaurant
-        echo "<form method='GET' action='voir_restaurant.php' style='display:inline;'>";
-        echo "<input type='hidden' name='id_resto' value='" . $critique['id_resto'] . "'>";
+        echo "<form method='GET' action='restaurant_details.php' style='display:inline;'>";
+        echo "<input type='hidden' name='id' value='" . $critique['id_resto'] . "'>";
         echo "<button type='submit' class='seeResto-button'>Voir le restaurant</button>";
         echo "</form>";
     }

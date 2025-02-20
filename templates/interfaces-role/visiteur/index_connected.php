@@ -4,7 +4,7 @@ Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use utils\render\Restaurant_render;
-$all_restaurants = DBConnector::getAllRestaurants();
+$all_restaurants = DBConnector::getAllRestaurants(30);
 $dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
 $categories = DBConnector::getAllType();
 $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
@@ -60,3 +60,4 @@ $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
             </div>
         </div>
     </div>
+   <h3 id="decouverte">Pas d'idées ? <a href="decouverte.php">Faites des découvertes !</a></h3>

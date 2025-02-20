@@ -26,9 +26,7 @@ link_to_css('static/decouvrir.css');
         if (UserTools::isAdmin()){
             include('interfaces-role/admin/index_connected.php');
         } ?>
-        <section id="container">
-            <?php include('decouvrir.php') ?>
-        </section>
+        
     </main>
     <script>
             document.getElementById('search').addEventListener('input', function() {

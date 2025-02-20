@@ -42,7 +42,13 @@ title_html('Connexion');
 link_to_css('static/decouverte.css');
 ?>
 <body>
-    <?php include('interfaces-role/global/header.php') ?>
+    <?php 
+    if (UserTools::isLogged()){
+        include('interfaces-role/global/header_connected.php');
+     }
+     else {
+        include('interfaces-role/global/header.php');
+     } ?>
     <main>
         <section>
             <div class="titles-container">
