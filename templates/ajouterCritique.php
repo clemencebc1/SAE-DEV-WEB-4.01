@@ -22,7 +22,7 @@ link_to_css('static/modifierCritique.css');
             <div class="container">
             <h1>Ajouter critique</h1>
             <form method="POST" action="utils/gestion-data/add-critique.php">
-                <input type="hidden" name="id_resto" value="<?= $_GET['id'] ?>">
+                <input type="hidden" name="id_resto" value="<?= $restaurant->getId() ?>">
                 <h2>Restaurant <?php echo $restaurant->getNom(); ?></h2>
                 <label>Votre avis</label>
                 <textarea name="message" rows="4" cols="50"></textarea><br>

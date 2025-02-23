@@ -1,7 +1,8 @@
-body {
+main {
     font-family: Arial, sans-serif;
     background-color: #f8f8f8;
     padding: 20px;
+    text-align: center;
 }
 
 .critique-container {
