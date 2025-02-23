@@ -11,7 +11,7 @@ $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
 ?>
         <div class="container">
         <div class="last-review">
-            <h2>Vous avez testé récemment ? <a href="#">Laissez un avis !</a></h2>
+            <h2>Vous avez testé récemment ? <a href="ajouterCritique.php?id=<?= $dernier_restaurant->getId() ?>">Laissez un avis !</a></h2>
             <?php $dernier_restau_render->iconRestaurant(false);?>
         </div>
 
