@@ -514,5 +514,32 @@ class DBConnector {
     return $result;
    }
 
+   /**
+    * get le maximum des id des critiques
+    * @return int
+    */
+   public static function maxCritiqueId():int{
+    $query = self::getInstance()->prepare('SELECT MAX(id_critique) FROM public."Critique"');
+    $query->execute();
+    $result = $query->fetch();
+    return $result['max'];
+   }
+
+   /**
+    * ajout une critique à la base de données
+    * @param mixed $id_resto id du resto
+    * @param mixed $id_critique id critique
+    * @param mixed $message l'avis
+    * @param mixed $date la date test
+    * @param mixed $etoiles le nb etoiles
+    * @param mixed $mail mail user
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function addCritique($id_resto, $id_critique, $message, $etoiles, $mail){
+    $query = self::getInstance()->prepare('INSERT INTO public."Critique" (id_resto, id_critique, message, date_test, etoiles, mail_user) VALUES (:id_resto, :id_critique, :message, CURRENT_DATE, :etoiles, :mail)');
+    $result = $query->execute(array('id_resto' => $id_resto, 'id_critique' => $id_critique, 'message' => $message, 'etoiles' => $etoiles, 'mail' => $mail));
+    return $result;
+   }
+
 }
 ?>

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id_critique'])) {
     $nouvelle_note = intval($_POST['note'])-1;
     $result = DBConnector::modifyCritique($id_critique, $nouveau_message, $nouvelle_note);
     if ($result) {
-        header('Location: ../../mescritiques.php?success=1');
+        header('Location: ../../mescritiques.php?success=3');
     } else {
         header('Location: ../../mescritiques.php?error=1');
     }

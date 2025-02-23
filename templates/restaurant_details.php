@@ -42,6 +42,10 @@ link_to_css('static/details.css');?>
     $restaurant_render->render();
 
     if (count($_SESSION)>=1){
+        echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
+        echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
+        echo "<button type='submit' class='seeResto-button'>Ajouter ma critique</button>";
+        echo "</form>";
         $critiques = DBConnector::getCritiqueByRestaurant(intval($_GET['id']));
         $renderCritique = new CritiqueRender($critiques);
         $renderCritique->render_critiques_restaurant();

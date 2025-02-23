@@ -27,8 +27,18 @@ class Restaurant_render extends Render {
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
                     echo"<p>Adresse : ". $restaurant->getAdresse() ."</p>";
-                    echo"<p>Type de cuisine : ". $restaurant->getTypeCuisine()->getCuisine() ." </p>";
+                    echo"<p>Type de cuisine : ";
+                    $type = $restaurant->getTypeCuisine();
+                    if (isset($type)){
+                        $restaurant->getTypeCuisine()->getCuisine();
+                    }
+                    else{
+                        echo "Non renseigné";
+                    }
+                    echo " </p>";
                     echo"<p>Inclus : ". " </p>";
+                    echo "<p>Nombre d'étoiles : ". $restaurant->getNbEtoile() ."</p>";
+                    echo"<p>Capacité : ". $restaurant->getCapacity()  ."</p>";
                     echo"<p>Site web : <a href='". $restaurant->getWebsite().  "'>". $restaurant->getNom(). "</a> </p>";
                 echo"</div>";
             echo"</div>";

@@ -78,7 +78,7 @@ class Restaurant {
      * Get le type de cuisine du restaurant
      * @return TypeCuisine
      */
-    public function getTypeCuisine(): TypeCuisine {
+    public function getTypeCuisine(): mixed {
         return $this->type_cuisine;
     }
 

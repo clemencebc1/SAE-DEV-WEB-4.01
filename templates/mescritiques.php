@@ -21,8 +21,14 @@ link_to_css('static/mescritiques.css');
             <h1>Vos dernières critiques gastronomiques</h1>
             
             <?php
-            if (isset($_GET['success'])) {
+            if (isset($_GET['success'])&&$_GET['success']==1) {
                 echo "<p style='color: green;'>Critique supprimée avec succès !</p>";
+            }
+            elseif (isset($_GET['success'])&&$_GET['success']==2){
+                echo "<p style='color: green;'>Critique ajoutée avec succès !</p>";
+            } 
+            elseif(isset($_GET['success'])&&$_GET['success']==3){
+                echo "<p style='color: green;'>Critique modifiée avec succès !</p>";
             } elseif (isset($_GET['error'])) {
                 echo "<p style='color: red;'>Erreur lors de la suppression.</p>";
             }
