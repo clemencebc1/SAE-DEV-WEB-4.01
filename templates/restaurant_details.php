@@ -45,7 +45,7 @@ link_to_css('static/details.css');?>
         $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
         $inFavoris = false;
         foreach ($favoris as $favori){
-            if ($favori->getIdRestaurant() == $id_restaurant){
+            if ($favori->getId() == $id_restaurant){
                 $inFavoris = true;
             }
         }

@@ -553,6 +553,21 @@ class DBConnector {
     return $result;
    }
 
+   /**
+    *  get le type favoris (le plus présent dans les favoris)
+    * @param mixed $mail mail user
+    * @return mixed id du type de cuisine
+    */
+   public static function typeFavoris($mail){
+    $query = self::getInstance()->prepare('SELECT cuisine FROM public."Restaurant" natural join public."aimer" natural left join public."TypeCuisine" WHERE mail=:mail and id_cuisine=id GROUP BY cuisine ORDER BY COUNT(cuisine) DESC LIMIT 1');
+    $query->execute(['mail' => $mail]);
+    $result = $query->fetch();
+    if ($result){
+        return $result['cuisine'];
+    }
+    return null;
+   }
+
    
 
 }

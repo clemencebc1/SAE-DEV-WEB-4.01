@@ -66,7 +66,6 @@ link_to_css('static/decouverte.css');
         <div class="titles-container">
                 <h1>Pas d’idées ? </h1>
                 <h2>Nos suggestions du moment</h2>
-                <h2>Cuisine simpliste </h2>
             </div>
         </section>
         <section>

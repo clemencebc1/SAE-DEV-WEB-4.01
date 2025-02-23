@@ -15,7 +15,16 @@ main {
     text-align: center;
     margin: 40px 0;
 }
-
+.stars {
+    color: gold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.no-stars {
+    color: rgb(184, 184, 184);
+    font-size: 18px;
+    margin-bottom: 5px;
+}
 .titles-container h1 {
     font-size: 2.5rem;
     font-weight: bold;

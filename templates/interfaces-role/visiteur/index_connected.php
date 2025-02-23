@@ -8,6 +8,7 @@ $all_restaurants = DBConnector::getAllRestaurants(30);
 $dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
 $categories = DBConnector::getAllType();
 $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
+
 ?>
         <div class="container">
         <div class="last-review">
