@@ -25,7 +25,7 @@ link_to_css('static/favoris.css');
             <?php $favoris_render->iconRestaurant(true)?>
         </div>
         <h3>Un coup de foudre ?</h3>
-        <h3 id="enregistrer">Enregistrer un nouveau coup de coeur</h3>
+        <h3 id="enregistrer">Enregistrer un <a href='decouverte.php'>nouveau coup de coeur</a></h3>
 
         
     </main>

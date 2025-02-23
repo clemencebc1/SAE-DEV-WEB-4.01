@@ -541,5 +541,26 @@ class DBConnector {
     return $result;
    }
 
+   /**
+    * ajout d'un restaurant aux favoris
+    * @param mixed $id_resto id du resto
+    * @param mixed $mail mail user
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function addFavoris($id_resto, $mail):bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."aimer" (id_resto, mail) VALUES (:id_resto, :mail)');
+    $result = $query->execute(array('id_resto' => $id_resto, 'mail' => $mail));
+    return $result;
+   }
+
+   /**
+    * get le type favoris (le plus present dans les favoris) pour un user
+    * @param mixed $mail mail user
+    * @return void
+    */
+   public static function typeFavoris($mail){
+
+   }
+
 }
 ?>

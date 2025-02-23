@@ -23,12 +23,16 @@
     position: absolute;
     bottom: 10px;
     left: 10px;
-    color: white;
+    color: black;
     font-size: 20px;
     font-weight: bold;
 }
 h3 {
     margin-left: 2%;
+}
+h3 a {
+    color: #fcc306;
+    text-decoration: none;
 }
 #enregistrer {
     color: #477eae;;
