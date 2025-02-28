@@ -1,6 +1,6 @@
 
 <style>
-    header {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,19 +23,24 @@ nav a {
 }
 
 .btn-connect {
-  background: linear-gradient(90deg, #ff7e39, #ffa95b);
+  background: linear-gradient(to right, #ffcc33, #ff9966);
   border: none;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
   cursor: pointer;
+  font-weight : bold;
 }
+
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 </style>
 <header>
     <div class="logo">IUTables’O</div>
@@ -43,6 +48,6 @@ body {
       <a href="decouverte.php">Découvrir</a>
       <a href="#">Avis</a>
       <a href="#">Contact</a>
-      <button class="btn-connect"><a href="connexion.php">Se connecter</a></button>
+      <a href="connexion.php"><button class="btn-connect">Se connecter</button></a>
     </nav>
 </header>

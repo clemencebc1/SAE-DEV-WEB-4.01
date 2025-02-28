@@ -1,26 +1,31 @@
 <?php 
-session_start()
-
+    session_start();
+    require_once 'autoloader.php';
+    Autoloader::register();
+    use utils\connection\DBconnector;
+    use utils\connection\UserTools;
+    use classes\model\Departement;
+    use classes\model\Restaurant;
+    use classes\model\Critique;
+    use utils\render\Restaurant_render;
 ?>
 
 <!DOCTYPE html>
     <html lang="fr">
         <?php
-            include 'global/head.php';
+            include 'interfaces-role/global/head.php';
             title_html('Accueil');
             link_to_css('static/accueil.css');
         ?>
         <body>
-            <?php include('global/header.php'); ?>
+            <?php include('interfaces-role/global/header.php'); ?>
             <div class="title"> 
                 <h2> Une petite faim ? </h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20%" height="50" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0,5 Q20,0 40,5 T100,5" fill="none" stroke="orange" stroke-width="1.5" />
-                </svg>
             </div>
             <main>
                 <section class="search">
                     <div class="search-bar">
+                        <img src="img/loupe.png" alt="Recherche" class="search-icon">
                         <input type="search" id="input-search" placeholder=" Rechercher un restaurant" />
                         <button type="submit" id="button-search"> Rechercher</button>
                     </div>
