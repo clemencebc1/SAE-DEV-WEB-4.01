@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
 namespace utils\connection;
+use classes\model\Caracteristique;
+use classes\model\Critique;
 use \PDO;
 use \Exception;
+use classes\model\restaurant;
+use classes\model\departement;
+use classes\model\TypeCuisine;
+use classes\model\User;
 
 class DBConnector {
     private $pdo;
@@ -11,240 +17,558 @@ class DBConnector {
     private $host;
     private $port;
     private $dn;
-    public function __construct(){
+    public static $instance = null;
+    
+
+    private function __construct() {
         $this->user = 'postgres.qwspzcdwzooofvlczlew';
         $this->password = 'sQFn5EbtM4dKt4b4';
         $this->host= 'aws-0-eu-west-3.pooler.supabase.com';
         $this->port = 6543;
         $this->dn = "pgsql:host=".$this->host.";port=". $this->port .";dbname=postgres";
-        $this->pdo = new PDO($this->dn, $this->user, $this->password);
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        
-}
-    
-    /**
-     * get_user, verifie un utilisateur dans la base de données 
-     * en fonction de l'identifiant et du mot de passe
-     *
-     * @param  string $mail
-     * @param  string $password
-     * @return bool true si l'utilisateur a saisi le bon mot de passe
-     */
-    public function get_user(string $mail, string $password):bool{
-        $sql = "SELECT * FROM USER WHERE MAIL = ? AND PASSWORD = SHA1(?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$mail, $password]);
-        $user = $stmt->fetch();
-        if ($user == NULL){
-            return false;
+        try {
+            self::$instance = new PDO($this->dn, $this->user, $this->password);
+            self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo 'Connexion échouée : ' . $e->getMessage();
         }
-        return true;
-
-    }    
-    /**
-     * get_poneys, get l'ensemble des poneys dans la base de données
-     *
-     * @return array ensemble des poneys
-     */
-    public function get_poneys(): array{
-        $sql = "SELECT * FROM PONEY;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }    
-    /**
-     * get_cours, get l'ensemble des cours dans la base de données
-     *
-     * @return array ensemble des cours 
-     */
-    public function get_cours(): array{
-        $sql = "SELECT * FROM COURS;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
     }
+
+    /**
+     * Retourne l'instance unique de la connexion à la base de données.
+     * @return PDO L'instance de la connexion à la base de données.
+     */
+    public static function getInstance(): PDO {
+        if (self::$instance == null) {
+            new DBconnector();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Vérifie les informations d'identification de l'utilisateur dans la base de données.
+     * @param string $username Le nom d'utilisateur.
+     * @param string $hashedPassword Le mot de passe haché.
+     * @return mixed Les informations de l'utilisateur si elles sont trouvées, sinon false.
+     */
+    public static function checkDB($username, $password): mixed {
+        $hash = hash('sha1', $password);
+        $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username AND PASSWORD = :password');
+        $query->execute(array('username' => $username, 'password' => "\x" . $hash));
+        $result = $query->fetch();
+        return $result;
+    }
+
+    /**
+     * inscrit un nouveau visiteur
+     * @param mixed $username mail
+     * @param mixed $password mot de passe en clair
+     * @param mixed $nom nom visiteur
+     * @param mixed $prenom prenom visiteur
+     * @param mixed $visiteur role
+     * @return bool true si inscrit sinon false (existe deja ou erreur)
+     */
+    public static function subscribe($username, $password, $nom, $prenom, $visiteur): bool {
+        $hash = hash('sha1', $password);
+        $query = self::getInstance()->prepare('INSERT INTO public."Visiteur" (MAIL, PASSWORD, NOM_USER, PRENOM, ROLE) VALUES (:username, :password, :nom, :prenom, :visiteur)');
+        $result = $query->execute(array('username' => $username, 'password' => "\x" . $hash, 'nom' => $nom, 'prenom' => $prenom, 'visiteur' => $visiteur));
+        return $result;
+    }
+
+    /**
+     * Recupere un utilisateur
+     * @param string $username L'adresse mail de l'utilisateur.
+     * @param string $nom Le nom de l'utilisateur.
+     * @param string $prenom Le prénom de l'utilisateur.
+     * @param string $password Le mot de passe de l'utilisateur.
+     * @return User l'utilisateur
+     */
+    public static function getUser($username): User {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Visiteur" WHERE MAIL = :username');
+        $query->execute(array('username' => $username));
+        $result = $query->fetch();
+        $user = new User($result['mail'], $result['password'], $result['nom_user'], $result['prenom'], $result['role'], array());
+        return $user;
+    }
+
+    public static function updateUser($username, $nom, $prenom, $password): bool {
+        $user = DBConnector::getUser($username);
+        if ($user->getPassword() == $password) {
+            $hash = $user->getPassword();
+        }
+        $query = self::getInstance()->prepare('UPDATE public."Visiteur" SET NOM_USER=:nom, PRENOM=:prenom, PASSWORD=:password WHERE MAIL=:username');
+        $result = $query->execute(array('nom' => $nom, 'prenom' => $prenom, 'password' => $hash, 'username' => $username));
+        return $result;
+    }
+
+    /**
+     * Récupère le département par son identifiant.
+     * @param int $id L'identifiant du département.
+     * @return Departement Le département.
+     */
+    public static function getDepartementById($id) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Departement" WHERE id_region = :idD');
+        $query->execute(array('idD' => $id));
+        $result = $query->fetch();
+        $dep = new Departement($result['id_region'], $result['nom_dep']);
+        return $dep;
+    }
+
+
+    /**
+     * Récupère le type de cuisine par son identifiant.
+     * @param int $id L'identifiant du type de cuisine.
+     * @return mixed Le type de cuisine.
+     */
+    public static function getTypeCuisineById($id): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE id = :idT');
+        $query->execute(array('idT' => $id));
+        $result = $query->fetch();
+        if ($result) {
+            $typeCuisine = new TypeCuisine($result['id'], $result['cuisine']);
+        } else {
+            $typeCuisine = null;
+        }
+        return $typeCuisine;
+    }
+
+    /**
+     * recupère le type de cuisine par son nom
+     * @param mixed $name nom de la cuisine
+     * @return mixed objet type cuisine
+     */
+    public static function getTypeCuisineByName($name): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE cuisine = :name');
+        $query->execute(array('name' => $name));
+        $result = $query->fetch();
+        if ($result){
+            $typeCuisine = new TypeCuisine($result['id'], $result['cuisine']);
+        }
+        $typeCuisine = null;
+        return $typeCuisine;
+    }
+
+    /**
+     * recupere la caracteristique par son nom
+     * @param mixed $name nom de la caracteristique
+     * @return mixed objet caracteristique
+     */
+    public static function getCaracteristiqueByName($name): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Caractéristique" WHERE carac = :name');
+        $query->execute(array('name' => $name));
+        $result = $query->fetch();
+        if ($result){
+            $caracteristique = new Caracteristique($result['id_carac'], $result['carac']);
+            return $caracteristique;
+        }
+        return null;
+    }
+
+    /**
+     * Récupère tous les restaurants de la base de données.
+     * @return array[Restaurant]  Les restaurants de la base de données.
+     */
+    public static function getAllRestaurants(int | null  $limit): array {
+        ($limit <  10 || $limit  == null ) ? $limit = 10 : false;
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+        $query->execute(array('limit' => $limit));
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['id_cuisine']) ?? new TypeCuisine(0, ''));
+        }
+        return $all_restaurants;
+    }
+
+    /**
+     * Récupère un restaurant par son identifiant.
+     * @param int $id L'identifiant du restaurant.
+     * @return mixed Le restaurant.
+     */
+    public static function getRestaurantById($id): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_resto = :idR');
+        $query->execute(array('idR' => $id));
+        $result = $query->fetch();
+        if (!$result) {
+            return null;
+        }
+        $restaurant = new Restaurant(
+            $result['id_resto'], 
+            $result['nom'], 
+            $result['adresse'] ?? '', 
+            $result['website'] ?? '', 
+            $result['capacity'] ?? 0, 
+            $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
+            self::getDepartementById($result['region_id']),
+            $result['url'] ?? '',
+            self::getTypeCuisineById($result['id_cuisine']));
+        return $restaurant;
+    }
+
+    /**
+     * recupere le restaurant par son nom
+     * @param mixed $name nom du restaurant
+     * @return mixed objet restaurant
+     */
+    public static function getRestaurantByName($nom): mixed {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE nom = :nom');
+        $query->execute(array('nom' => $nom));
+        $result = $query->fetch();
+        if ($result){
+            $restaurant = new Restaurant(
+                $result['id_resto'], 
+                $result['nom'], 
+                $result['adresse'] ?? '', 
+                $result['website'] ?? '', 
+                $result['capacity'] ?? 0, 
+                $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
+                self::getDepartementById($result['region_id']),
+                $result['url'] ?? '',
+                self::getTypeCuisineById($result['id_cuisine']) ?? new TypeCuisine(0, ''));
+                return $restaurant;
+        } 
+        return null;
+    }
+
+
+    public static function getRestaurantByType($id_type){
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_cuisine = :idT');
+        $query->execute(array('idT' => $id_type));
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['id_cuisine']));
+        }
+        return $all_restaurants;
+    }
+
+    /**
+     * Récupère les restaurants par leur nom.
+     * @param string $name Le nom du restaurant.
+     * @return array[Restaurant] Les restaurants.
+     */
+    public static function searchRestaurantByCity($city) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant"  natural left join public."Photo" WHERE adresse LIKE :city');
+        $query->execute(array('city' => '%'.$city.'%'));
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['id_cuisine']));
+        }
+        return $all_restaurants;
+    }
+
+    /**
+     * Récupère les restaurants par leur nom.
+     * @param string $name Le nom du restaurant.
+     * @return array[Restaurant] Les restaurants.
+     */
+    public static function searchRestaurantByType($type) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine" WHERE cuisine LIKE :type');
+        $query->execute(array('type' => '%'.$type.'%'));
+        $types = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($types as $idCuisine) {
+            $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_cuisine = :idC');
+            $query->execute(array('idC' => $idCuisine['id']));
+            $result = $query->fetchAll();
+            foreach ($result as $restaurant) {
+                $all_restaurants[] = new Restaurant(
+                    $restaurant['id_resto'], 
+                    $restaurant['nom'], 
+                    $restaurant['adresse'] ?? '', 
+                    $restaurant['website'] ?? '', 
+                    $restaurant['capacity'] ?? 0, 
+                    $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
+                    self::getDepartementById($restaurant['region_id']),
+                    $restaurant['url'] ?? '',
+                    self::getTypeCuisineById($restaurant['id_cuisine'])
+);
+            }
+        } 
+        return $all_restaurants;
+    }
+
+    /**
+     * Récupère les restaurants par leur nom.
+     * @param string $name Le nom du restaurant.
+     * @return array[Restaurant] Les restaurants.
+     */
+    public static function searchRestaurantByName($name) {
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE nom LIKE :name');
+        $query->execute(array('name' => '%'.$name.'%'));
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['id_cuisine']));
+        }
+        return $all_restaurants;
+    }    
     
-    public function get_seances_for_user(string $user){
-        $sql = "SELECT DISTINCT DESCRIPTIF, DATE_SEANCE FROM SEANCE NATURAL JOIN PARTICIPER NATURAL JOIN ADHERENT NATURAL JOIN PERSONNE WHERE EMAIL='in@icloud.org' AND IDADH=IDPER;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
+    /**
+     * recupere tous les types de cuisine
+     * @return TypeCuisine[] tableau de type de cuisine
+     */
+    public static function getAllType(): array {
+        $query = self::getInstance()->prepare('SELECT * FROM public."TypeCuisine"');
+        $query->execute();
+        $result = $query->fetchAll();
+        $all_type = [];
+        foreach ($result as $type) {
+            $all_type[] = new TypeCuisine($type['id'], $type['cuisine']);
+        }
+        return $all_type;
+    }
+
+    /**
+     * Récupere le dernier restaurant visité par un utilisateur.
+     * @param string $user L'adresse mail de l'utilisateur.
+     * @return Restaurant le restaurant en question.
+     */
+    public static function getLatestRestaurant($user): Restaurant {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, url, adresse, website, capacity, nb_etoile, id_cuisine, region_id FROM public."Critique" natural join public."Restaurant"  natural join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
+        $query->execute(['user' => $user]);
+        $result = $query->fetch();
+        $restaurant = new Restaurant(
+            $result['id_resto'], 
+            $result['nom'], 
+            $result['adresse'] ?? '', 
+            $result['website'] ?? '', 
+            $result['capacity'] ?? 0, 
+            $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0, 
+            self::getDepartementById($result['region_id']),
+            $result['url'] ?? '',
+            self::getTypeCuisineById($result['id_cuisine']));
+        return $restaurant;
+    }
+
+    /**
+     * Récupère les critiques d'un utilisateur.
+     * @param string $user L'adresse mail de l'utilisateur.
+     * @return array Les critiques de l'utilisateur.
+     */
+    public static function getCritiquesByUser($user): array {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, message, date_test, id_critique, etoiles FROM public."Critique" natural join public."Restaurant" WHERE mail_user=:user ORDER BY date_test DESC');
+        $query->execute(['user' => $user]);
+        $result = $query->fetchAll();
+        return $result;
+    }
+
+    /**
+     * recupere une critique en fonction de son id
+     * @param mixed $id_critique
+     * @return Critique
+     */
+    public static function getCritique($id_critique): Critique{
+        $query = self::getInstance()->prepare('SELECT * FROM public."Critique" WHERE id_critique=:id');
+        $query->execute(['id' => $id_critique]);
+        $result = $query->fetch();
+        $critique = new Critique($result['id_critique'], $result['message'], new Restaurant($result['id_resto'],'', '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User('', '', '', '', '', array()), $result['date_test'], $result['etoiles']);
+        return $critique;
     }
 
 
     /**
-     * get_seances, get l'ensemble des seances dans la base de donnees
-     *
-     * @return array ensemble des seances
+     * get les critiques en fonction du restaurant
+     * @param mixed $id_resto id restaurant
+     * @return Critique[] liste des critiques
      */
-    public function get_seances():array{
-        $sql = "SELECT * FROM SEANCE;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
+    public static function getCritiqueByRestaurant($id_resto): array{
+        $query = self::getInstance()->prepare('SELECT * from public."Critique" natural join public."Visiteur" natural join public."Restaurant" where public."Visiteur".mail=public."Critique".mail_user and id_resto=:id');
+        $query->execute(['id' => $id_resto]);
+        $result = $query->fetchAll();
+        $all_critiques = array();
+        foreach ($result as $critique) {
+            array_push($all_critiques,new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], '', '', array()), $critique['date_test'], $critique['etoiles']));
+        }
+        return $all_critiques;
     }
 
-    /**
-     * get_personnes, get l'ensemble des personnes dans la base de donnees
-     *
-     * @return array ensemble de personnes
-     */
-    public function get_personnes():array{
-        $sql = "SELECT * FROM PERSONNE;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }
-        
-    /**
-     * get_moniteurs, get l'ensemble des moniteurs de la base de donnees
-     *
-     * @return array ensemble des moniteurs
-     */
-    public function get_moniteurs():array{
-        $sql = "SELECT * FROM MONITEUR;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }    
-    /**
-     * get_adherents, get l'ensemble des adherents dans la base de données
-     *
-     * @return array ensemble des adherents
-     */
-    public function get_adherents():array{
-        $sql = "SELECT * FROM ADHERENT;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }    
-    /**
-     * get_factures, get l'ensemble des factures de la base de donnes
-     *
-     * @return array ensemble des factures
-     */
-    public function get_factures():array{
-        $sql = "SELECT * FROM FACTURE;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }    
-
-/**
-     * get_factures, get factures user 
-     *
-     * @return array ensemble des factures d'un utilisateur
-     */
-    public function get_factures_user(string $user){
-        $user = "in@icloud.org";
-        $sql = "SELECT DATEEDITION, PAYE, TOTALTTC, DESCRIPTIF FROM FACTURE NATURAL JOIN PERSONNE NATURAL JOIN PARTICIPER NATURAL JOIN SEANCE WHERE IDADH=IDPER AND EMAIL='". $user ."'";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
-    }
-    /**
-     * get_tarifs, get l'ensemble des tarifs de la base de donnees
-     *
-     * @return array ensemble des tarifs
-     */
-    public function get_tarifs():array{
-        $sql = "SELECT * FROM TARIFS;";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
+    /** 
+    * Récupère les favoris d'un utilisateur.
+    * @param string $user L'adresse mail de l'utilisateur.
+    * @return array Les favoris de l'utilisateur.
+    */
+    public static function getFavorisByUser($user): array {
+        $query = self::getInstance()->prepare('Select * from public."aimer" natural join public."Restaurant" natural left join public."Photo" where mail=:user');
+        $query->execute(['user' => $user]);
+        $result = $query->fetchAll();
+        $all_restaurants = [];
+        foreach ($result as $restaurant) {
+            $all_restaurants[] = new Restaurant(
+                $restaurant['id_resto'], 
+                $restaurant['nom'], 
+                $restaurant['adresse'] ?? '', 
+                $restaurant['website'] ?? '', 
+                $restaurant['capacity'] ?? 0, 
+                $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                self::getDepartementById($restaurant['region_id']),
+                $restaurant['url'] ?? '',
+                self::getTypeCuisineById($restaurant['id_cuisine']));
+        }
+        return $all_restaurants;
     }
 
-    /**
-     * get_next_id_personne, get l'identifiant de la prochaine personne
-     *
-     * @return int identifiant de la prochaine personne
-     */
-    public function get_next_id_personne(): int {
-        $sql = "SELECT MAX(IDPER) FROM PERSONNE";
-        $stmt = $this->pdo->query($sql);
-        $id = $stmt->fetch();
-        return $id[0] + 1;
+    /** 
+    * Supprime un restaurant favoris
+    * @param string $user L'adresse mail de l'utilisateur.
+    * @param int $id_resto L'identifiant du restaurant.
+    * @return bool true si la suppression a réussi, false sinon.
+    */
+    public static function deleteFavoris($user, $id_resto): bool {
+        $query = self::getInstance()->prepare('DELETE FROM public."aimer" WHERE mail=:user AND id_resto=:id');
+        $result = $query->execute(['user' => $user, 'id' => $id_resto]);
+        return $result;
     }
 
-
-    /**
-     * insertion_personne, insere une personne dans la base de donnees
-     *
-     * @param  int future id de la personne
-     * @param  string nom de la personne
-     * @param  string prenom de la personne
-     * @param  string email de la personne
-     * @param  string date_naissancevde la personne
-     * @param  string poids de la personne
-     * @param  string adresse de la personne
-     * @param  string tel de la personne
-     * @return void
-     */
-    public function insertion_personne(int $id ,string $nom, string $prenom, string $email, string $date_naissance, string $poids, string $adresse,string $tel): void {
-        $sql = "INSERT INTO PERSONNE (IDPER, NOMPER, PRENOMPER, EMAIL, DDNPER, POIDS, ADRESSE, PORTABLE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id, $nom, $prenom, $email, $date_naissance, $poids, $adresse, $tel]);
+    /**  supprime une critique
+    * @param int $id_critique L'identifiant de la critique.
+    * @return bool true si la suppression a réussi, false sinon.
+    */
+    public static function deleteCritique($id_critique): bool {
+        $query = self::getInstance()->prepare('DELETE FROM public."Critique" WHERE id_critique=:id');
+        $result = $query->execute(['id' => $id_critique]);
+        return $result;
     }
 
-    
-
-    /**
-     * insertion_adherent, insere un adherent dans la base de donnees
-     *
-     * @param  int future id de l'adherent
-     * @param  string date de fin de cotisation
-     * @param  string niveau de l'adherent
-     * @return void
-     */
-    public function insertion_adherent(int $idadh, string $date, string $niveau): void {
-        $sql = "INSERT INTO ADHERENT (IDADH, FINCOTISATION, NIVEAUGALOT) VALUES (:id, :date, :niveau)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $idadh);
-        $stmt->bindParam(':date', $date);
-        $stmt->bindParam(':niveau', $niveau);
-        $stmt->execute();
+    /** modifie une critique
+    * @param int $id_critique L'identifiant de la critique.
+    * @param string $message Le message de la critique.
+    * @param int $etoiles Le nombre d'étoiles de la critique.
+    * @return bool true si la modification a réussi, false sinon.
+    */
+    public static function modifyCritique($id_critique, $message, $etoiles): bool {
+        $query = self::getInstance()->prepare('UPDATE public."Critique" SET message=:message, etoiles=:etoiles WHERE id_critique=:id');
+        $result = $query->execute(['message' => $message, 'etoiles' => $etoiles, 'id' => $id_critique]);
+        return $result;
     }
 
-    public function get_cours_for_moniteur(string $moniteur){
-        $sql = "SELECT DESCRIPTIF, DATEENC FROM ENCADRER NATURAL JOIN SEANCE NATURAL JOIN MONITEUR natural join PERSONNE where IDPER=IDMON and EMAIL='". $moniteur ."'";
-        $stmt = $this->pdo->query($sql);
-        $rows = $stmt->fetchAll();
-        return $rows;
+   /**
+    * ajoute un restaurant à la base de donées
+    * @param mixed $name nom du restaurant
+    * @param mixed $capacity capacité du restaurant
+    * @param mixed $tel numéro de téléphone
+    * @param mixed $siret numéro siret
+    * @param mixed $website site web
+    * @param mixed $typesCuisine type de cuisine
+    * @param mixed $region région
+    * @param mixed $etoiles nombre d'étoiles
+    * @param mixed $horaires horaires
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires): bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires)');
+    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires));
+    return $result;
+   }
 
-    }
+   /**
+    * insertions des carac d'un restaurants dans la db
+    * @param mixed $id_resto id du resto
+    * @param mixed $id_carac id de la carac
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function insertCaracteriserRestaurant($id_resto, $id_carac): bool{
+    if (!isset($id_resto) || !isset($id_carac)){
+        return false;
+   }
+    $query = self::getInstance()->prepare('INSERT INTO public."Caracteriser" (id_carac, id_resto) VALUES (:id_carac, :id_resto)');
+    $result = $query->execute(array('id_carac' => $id_carac, 'id_resto' => $id_resto));
+    return $result;
+   }
 
-    /**
-     * insertion_moniteur, insere un moniteur dans la base de donnees
-     *
-     * @param  int future id du moniteur
-     * @param  string type de contrat
-     * @param  string date d'embauche
-     * @return void
-     */
-    public function insertion_moniteur(int $idmon, $contract, string $date): void {
-        $sql = "INSERT INTO MONITEUR (IDMON, TYPECONTRAT, DATEEMBAUCHE) VALUES (:id, :contract, :date)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $idmon);
-        $stmt->bindParam(':contract', $contract);
-        $stmt->bindParam(':date', $date);
-        $stmt->execute();
-    }
+   /**
+    * get le maximum des id des critiques
+    * @return int
+    */
+   public static function maxCritiqueId():int{
+    $query = self::getInstance()->prepare('SELECT MAX(id_critique) FROM public."Critique"');
+    $query->execute();
+    $result = $query->fetch();
+    return $result['max'];
+   }
 
-    /**
-     * insertion d'un nouvel user pour une personne
-     * @param string email de la personne
-     * @param string password de la personne
-     * @param string role de la personne
-     */
-    public function insert_user(string $email, string $hashedPassword, string $role): void {
-        $sql = "INSERT INTO USER (MAIL, PASSWORD, ROLE) VALUES (:email, :password, :role)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':role', $role);
-        $stmt->execute();
+   /**
+    * ajout une critique à la base de données
+    * @param mixed $id_resto id du resto
+    * @param mixed $id_critique id critique
+    * @param mixed $message l'avis
+    * @param mixed $date la date test
+    * @param mixed $etoiles le nb etoiles
+    * @param mixed $mail mail user
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function addCritique($id_resto, $id_critique, $message, $etoiles, $mail){
+    $query = self::getInstance()->prepare('INSERT INTO public."Critique" (id_resto, id_critique, message, date_test, etoiles, mail_user) VALUES (:id_resto, :id_critique, :message, CURRENT_DATE, :etoiles, :mail)');
+    $result = $query->execute(array('id_resto' => $id_resto, 'id_critique' => $id_critique, 'message' => $message, 'etoiles' => $etoiles, 'mail' => $mail));
+    return $result;
+   }
+
+   /**
+    * ajout d'un restaurant aux favoris
+    * @param mixed $id_resto id du resto
+    * @param mixed $mail mail user
+    * @return bool true si l'ajout a réussi, false sinon.
+    */
+   public static function addFavoris($id_resto, $mail):bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."aimer" (id_resto, mail) VALUES (:id_resto, :mail)');
+    $result = $query->execute(array('id_resto' => $id_resto, 'mail' => $mail));
+    return $result;
+   }
+
+   /**
+    *  get le type favoris (le plus présent dans les favoris)
+    * @param mixed $mail mail user
+    * @return mixed id du type de cuisine
+    */
+   public static function typeFavoris($mail){
+    $query = self::getInstance()->prepare('SELECT cuisine FROM public."Restaurant" natural join public."aimer" natural left join public."TypeCuisine" WHERE mail=:mail and id_cuisine=id GROUP BY cuisine ORDER BY COUNT(cuisine) DESC LIMIT 1');
+    $query->execute(['mail' => $mail]);
+    $result = $query->fetch();
+    if ($result){
+        return $result['cuisine'];
     }
+    return null;
+   }
+
+   
 
 }
 ?>
