@@ -78,12 +78,6 @@
 }
 
 
-.filters {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
 
 .dropdown {
     position: relative;
@@ -128,16 +122,16 @@
     display: block;
 }
 
-
-.selected-filters {
+#selected-filters {
     margin-top: 10px;
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
 .filter-tag {
-    background: black;
-    color: white;
+    background-color: #f1c40f;
+    color: black;
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 14px;
@@ -149,7 +143,10 @@
 .close {
     cursor: pointer;
     font-weight: bold;
+    padding: 0 5px;
 }
+
+
 
 
 #decouverte {

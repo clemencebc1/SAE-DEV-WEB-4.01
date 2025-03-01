@@ -4,12 +4,13 @@ Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use utils\render\Restaurant_render;
-$all_restaurants = DBConnector::getAllRestaurants(30);
+$all_carac = DBConnector::getCaracteristique();
 $dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
 $categories = DBConnector::getAllType();
 $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
-
+link_to_js('static/js/boutons-bar.js');
 ?>
+
         <div class="container">
         <div class="last-review">
             <h2>Vous avez testé récemment ? <a href="ajouterCritique.php?id=<?= $dernier_restaurant->getId() ?>">Laissez un avis !</a></h2>
@@ -18,21 +19,22 @@ $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
 
         <div class="search-section">
             <div class="search-bar">
-                <input type="text" id="search" placeholder="Rechercher un restaurant ...">
+            <input type="text" id="searchBar" placeholder="Rechercher un restaurant..." autocomplete="off">
                 <button>Rechercher</button>
             </div>
 
             <div class="filters">
                 <div class="dropdown">
-                    <button class="dropbtn">🍽️ Restaurant ▼</button>
+                    <button class="dropbtn">🍽️ Caractéristique ▼</button>
                     <div class="dropdown-content">
                         <?php 
-                        $cpt = count($all_restaurants);
-                        if (count($all_restaurants)>5){
+                        $cpt = count($all_carac);
+                        if (count($all_carac)>5){
                             $cpt = 5;
                         }
                         for($i = 0; $i<$cpt;$i++){
-                         echo "<a href='#'>" . $all_restaurants[$i]->getNom() . "</a>";
+                            $restaurant = $all_carac[$i]->getNom();
+                            echo "<a href='#' class='restaurant-item' data-restaurant='" . $restaurant . "'>" . $restaurant . "</a>";
                         }?>
                     </div>
                 </div>
@@ -46,19 +48,18 @@ $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
                             $cpt = 5;
                         }
                     
-                        for($i =0; $i<$cpt;$i++){
-                         echo "<a href='#'>" . $categories[$i]->getCuisine() . "</a>";
+                        for ($i = 0; $i < $cpt; $i++) {
+                            $cuisine = $categories[$i]->getCuisine();
+                            echo "<a href='#' class='category-item' data-cuisine='" . $cuisine . "'>" . $cuisine . "</a>";
                         }?>
                     </div>
                 </div>
 
             </div>
 
-            <div class="selected-filters">
-                <span class="filter-tag">Italien <span class="close">&times;</span></span>
-                <span class="filter-tag">Orléans <span class="close">&times;</span></span>
-                <span class="filter-tag">Végétarien <span class="close">&times;</span></span>
-            </div>
+            <div id="selected-filters"></div>
+            <div id="'restaurant"></div>
         </div>
     </div>
    <h3 id="decouverte">Pas d'idées ? <a href="decouverte.php">Faites des découvertes !</a></h3>
+

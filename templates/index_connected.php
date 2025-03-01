@@ -28,14 +28,6 @@ link_to_css('static/decouvrir.css');
         } ?>
         
     </main>
-    <script>
-            document.getElementById('search').addEventListener('input', function() {
-                let query = this.value.toLowerCase();
-                document.querySelectorAll('.category-box').forEach(box => {
-                    box.style.display = box.innerText.toLowerCase().includes(query) ? '' : 'none';
-                });
-            });
-    </script>
     <?php include('interfaces-role/global/footer.php'); ?>
     </body>
 </html>
