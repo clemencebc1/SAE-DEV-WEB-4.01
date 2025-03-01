@@ -23,7 +23,7 @@ link_to_css('static/mescritiques.css');
             if (isset($_GET['success'])&&$_GET['success']==1) {
                 echo "<p style='color: green;'>Critique supprimée avec succès !</p>";
             }
-            f (isset($_GET['error'])&&$_GET['error']==1) {
+            if (isset($_GET['error'])&&$_GET['error']==1) {
                 echo "<p style='color: red;'>Erreur lors de la suppression</p>";
             }
             $critiques = DBConnector::getCritiques();
