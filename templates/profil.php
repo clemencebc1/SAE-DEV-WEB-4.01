@@ -48,7 +48,14 @@ link_to_css('static/profil.css');
                 echo "<p>Il y a " . count($critiques) . "<a href='mescritiques.php'> critiques enregistrées.</a></p>";
                 $favoris = $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
                 echo "<p>Il y a " . count($favoris) . " restaurants enregistrés dans <a href='favoris.php'> vos favoris.</a></p>";
-                ?>
+                $type = DBConnector::typeFavoris($_SESSION['user']['username']);
+                if ($type == null){
+                    $type = "non renseigné";
+                }
+                else {
+                    $type = $type['cuisine'];
+                }
+                echo "<p> Votre type favoris est ". $type . "</p>"?>
 
             </div>
         </main>

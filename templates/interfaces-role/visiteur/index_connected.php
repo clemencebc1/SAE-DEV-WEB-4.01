@@ -33,7 +33,7 @@ link_to_js('static/js/boutons-bar.js');
                             $cpt = 5;
                         }
                         for($i = 0; $i<$cpt;$i++){
-                            $restaurant = $all_carac[$i]->getNom();
+                            $restaurant = $all_carac[$i]->getMessage();
                             echo "<a href='#' class='restaurant-item' data-restaurant='" . $restaurant . "'>" . $restaurant . "</a>";
                         }?>
                     </div>
@@ -58,8 +58,7 @@ link_to_js('static/js/boutons-bar.js');
             </div>
 
             <div id="selected-filters"></div>
-            <div id="'restaurant"></div>
-        </div>
-    </div>
+            </div>
+            </div>      
    <h3 id="decouverte">Pas d'idées ? <a href="decouverte.php">Faites des découvertes !</a></h3>
 

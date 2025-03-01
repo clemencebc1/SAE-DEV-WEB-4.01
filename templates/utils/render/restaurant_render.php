@@ -116,4 +116,27 @@ class Restaurant_render extends Render {
             echo "<img src='". $restaurant->getPhotos() . "' alt='img_restaurant'>";
         }
     }
+
+    function moyenne(): void {
+        echo "<article class='all-restaurants'>";
+        foreach ($this->objects as $restaurant){
+            echo "<div class='restaurant'>";
+            echo "<h3 class='nom'><a href='restaurant_details.php?id=". $restaurant['id_resto'] . "'>" . $restaurant['nom'] . "</a></h3>";
+            $nbetoile = $restaurant['moyenne_etoiles'];
+            echo "<div class='etoiles'>";
+            for ($i = 0; $i<5; $i++){
+                if ($i<$nbetoile){
+                    echo "<span class='stars'>★</span>";
+                }
+                else {
+                    echo "<span class='no-stars'>★</span>";
+                }
+            }
+            echo "</div>";
+            echo "<p class='adresse'>" . $restaurant['adresse'] . "</p>";
+    
+            echo "</div>";
+        }
+        echo "</article>";
+    }
 }

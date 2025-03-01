@@ -185,7 +185,9 @@ class DBConnector {
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
     public static function getAllRestaurants(int | null  $limit): array {
-        ($limit <  10 || $limit  == null ) ? $limit = 10 : false;
+        if ($limit == null){
+            $limit = 10;
+        }
         $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
         $query->execute(array('limit' => $limit));
         $result = $query->fetchAll();
@@ -407,6 +409,21 @@ class DBConnector {
     }
 
     /**
+     * Récupère les critiques 
+     */
+    public static function getCritiques():array{
+        $query = self::getInstance()->prepare('SELECT * FROM public."Critique" natural join public."Restaurant" join public."Visiteur" on public."Visiteur".mail=public."Critique".mail_user');
+        $query->execute();
+        $result = $query->fetchAll();
+        $all_critiques = [];
+        foreach ($result as $critique) {
+            $all_critiques[] = new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], $critique['prenom'], '', array()), $critique['date_test'], $critique['etoiles']);
+        }
+        return $all_critiques;
+    }
+
+
+    /**
      * recupere une critique en fonction de son id
      * @param mixed $id_critique
      * @return Critique
@@ -574,14 +591,36 @@ class DBConnector {
     * @return mixed id du type de cuisine
     */
    public static function typeFavoris($mail){
-    $query = self::getInstance()->prepare('SELECT cuisine FROM public."Restaurant" natural join public."aimer" natural left join public."TypeCuisine" WHERE mail=:mail and id_cuisine=id GROUP BY cuisine ORDER BY COUNT(cuisine) DESC LIMIT 1');
+    $query = self::getInstance()->prepare('SELECT r.id_cuisine, typeC.cuisine, COUNT(*) AS nombre_fav
+    FROM public."Restaurant" r
+    JOIN public."TypeCuisine" typeC ON r.id_cuisine = typeC.id
+    JOIN public."aimer" a ON r.id_resto = a.id_resto
+    WHERE a.mail = :mail
+    GROUP BY r.id_cuisine, typeC.cuisine
+    ORDER BY nombre_fav DESC
+    LIMIT 1;    
+    ');
     $query->execute(['mail' => $mail]);
     $result = $query->fetch();
-    if ($result){
-        return $result['cuisine'];
-    }
-    return null;
+    return $result;
    }
+
+   /**
+    * recupere les meilleurs restaurants en faisant la moyenne des etoiles des critiques sur un restaurant
+    * @return array
+    */
+   public static function getFavorisByStars(){
+    $stmt =   'SELECT r.id_resto, r.nom, r.adresse, COALESCE(AVG(c.etoiles), 0) AS moyenne_etoiles
+    FROM public."Restaurant" r
+    LEFT JOIN public."Critique" c ON r.id_resto = c.id_resto
+    GROUP BY r.id_resto, r.nom
+    ORDER BY moyenne_etoiles DESC limit 10;
+    ';
+    $query = self::getInstance()->prepare($stmt);
+    $query->execute();
+    $result = $query->fetchAll();
+    return $result;
+}
 
    
 
