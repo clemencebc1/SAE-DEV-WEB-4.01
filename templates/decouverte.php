@@ -59,7 +59,7 @@ $render = new Restaurant_render($restaurants);
 <html lang="fr">
 <?php 
 include 'interfaces-role/global/head.php'; 
-title_html('Connexion');
+title_html('Découverte');
 link_to_css('static/decouverte.css');
 ?>
 <body>
