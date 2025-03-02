@@ -622,7 +622,17 @@ class DBConnector {
     return $result;
 }
 
-   
+    /**
+     * propose des nom de restaurant en suggestion
+     * @return array String nom des restaurants
+     */
+   public static  function getSuggestions($initialSequence, $limit) {
+    $stmt = 'SELECT nom FROM public."Restaurant" WHERE nom LIKE :initialSequence LIMIT :limit';
+    $query = self::getInstance()->prepare($stmt);
+    $query->execute(['initialSequence' => $initialSequence . '%', 'limit' => $limit]);
+    $result = $query->fetchAll();
+    return $result;
+   }
 
 }
 ?>
