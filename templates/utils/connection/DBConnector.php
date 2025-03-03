@@ -184,12 +184,19 @@ class DBConnector {
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
-    public static function getAllRestaurants(int | null  $limit): array {
+    public static function getAllRestaurants(int | null  $limit, int | null $type): array {
         if ($limit == null){
             $limit = 10;
         }
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
-        $query->execute(array('limit' => $limit));
+        if (!empty($type)) {
+            $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_cuisine = :type ORDER BY nom Limit :limit');
+            $query->execute(array('type' => $type, 'limit' => $limit));
+        } else {
+            $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+            $query->execute(array('limit' => $limit));
+        }
+        // $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+        // $query->execute(array('limit' => $limit));
         $result = $query->fetchAll();
         $all_restaurants = [];
         foreach ($result as $restaurant) {
@@ -633,6 +640,5 @@ class DBConnector {
     $result = $query->fetchAll();
     return $result;
    }
-
 }
 ?>

@@ -36,6 +36,7 @@ else {
     $limit = 10;
 }
 $restaurants = [];
+$all_types = DBconnector::getAllType();
 
 if (!(empty($_GET["search"]))) {
     $restaurants = [];
@@ -43,14 +44,24 @@ if (!(empty($_GET["search"]))) {
     $byName = DBconnector::searchRestaurantByName($_GET["search"]);
     $byCity = DBconnector::searchRestaurantByCity($_GET["search"]);
     $restaurants = array_merge($byName, $byType, $byCity);
-}
-
-
-if (empty($_GET["search"])) {
-    $restaurants = DBconnector::getAllRestaurants($limit);
-} else {
-    null;
+    if (!empty($_GET["type"])) {
+        for ($i = 0; $i < count($restaurants); $i++) {
+            $typeCuisine = $restaurants[$i]->getTypeCuisine();
+            if ($typeCuisine !== null) {
+                $condition = ($_GET["type"] == $typeCuisine->getId());
+                echo var_dump($condition);
+                if ($condition) {
+                    unset($restaurants[$i]);
+                }
+            }
+        }
+    }  
+}else if (empty($_GET["search"]) && empty($_GET["type"])) {
+    $restaurants = DBconnector::getAllRestaurants($limit, $type=null);
+} else if (empty($_GET["search"]) && (!empty($_GET["type"]))) {
+    $restaurants = DBconnector::getAllRestaurants($limit, $_GET["type"]);
 }  
+
 
 $render = new Restaurant_render($restaurants);
 ?>
@@ -80,6 +91,12 @@ link_to_css('static/decouverte.css');
                 <form action="" method="get">
                     <div id=sarch-box>
                         <input type="text" name="search" id="search" placeholder="Ville, Restaurant, type de cuisine.." value="<?php if(isset($_GET['search'])) echo $_GET['search']; ?>">
+                        <select name="type" id="type">
+                            <option value="">Type de cuisine</option>
+                            <?php foreach ($all_types as $type) : ?>
+                                <option value="<?php echo $type->getId(); ?>"><?php echo $type->getCuisine(); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                         <button type="submit">Rechercher</button>
                     </div>
                 </form>
