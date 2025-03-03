@@ -1,7 +1,7 @@
 <?php
 namespace utils\connection;
 // use \PDO;
-use utils\connection\DBconnector;
+use utils\connection\DBConnector;
 
 
 
@@ -13,7 +13,7 @@ class UserTools {
      * @param mixed $password
      */
     private static function checkDB($username, $password): mixed {
-        $result = DBconnector::checkDB($username, $password);
+        $result = DBConnector::checkDB($username, $password);
         return $result;
     }
 

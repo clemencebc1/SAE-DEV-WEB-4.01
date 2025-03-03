@@ -15,7 +15,7 @@ class Restaurant_render extends Render {
     function render(): void{
         $restaurant = $this->objects[0];
         echo"<section class='titre'>";
-            echo"<h1>Détails du restaurant ". $restaurant->getNom() ."</h1>";
+            echo"<h1>Détails du restaurant <span>". $restaurant->getNom() ."</span></h1>";
         echo"</section>";
         echo"<section>";
             echo"<div class='image_nom'>";
@@ -78,6 +78,8 @@ class Restaurant_render extends Render {
         foreach($this->objects as $restaurant){;
             echo "<div class='restaurant-card'>";
             $result_photo = $restaurant->getPhotos();
+            $id = $restaurant->getId();
+            echo "<a href='restaurant_details.php?id=$id' class='details_restaurant'>";
             if ($result_photo == '' || $result_photo == null){
                 echo "<h4>Il n'y a pas de photos pour ce restaurant</h4>";
             }

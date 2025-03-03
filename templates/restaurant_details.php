@@ -12,6 +12,7 @@ use classes\model\restaurant;
 use utils\connection\DBConnector;
 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <?php include('interfaces-role/global/head.php'); 

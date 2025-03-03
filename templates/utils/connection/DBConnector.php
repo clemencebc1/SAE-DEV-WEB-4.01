@@ -41,7 +41,7 @@ class DBConnector {
      */
     public static function getInstance(): PDO {
         if (self::$instance == null) {
-            new DBconnector();
+            new DBConnector();
         }
         return self::$instance;
     }
