@@ -55,9 +55,6 @@ $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
             </div>
 
             <div class="selected-filters">
-                <span class="filter-tag">Italien <span class="close">&times;</span></span>
-                <span class="filter-tag">Orléans <span class="close">&times;</span></span>
-                <span class="filter-tag">Végétarien <span class="close">&times;</span></span>
             </div>
         </div>
     </div>
