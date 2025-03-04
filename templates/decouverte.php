@@ -9,7 +9,12 @@ use classes\model\Restaurant;
 use classes\model\Critique;
 use utils\render\Restaurant_render;
 
-$limit = 10;
+if (isset($_GET['inc'])) {
+    $limit = intval($_GET['inc']);
+}
+else {
+    $limit = 10;
+}
 $restaurants = [];
 
 if (!(empty($_GET["search"]))) {
@@ -20,13 +25,9 @@ if (!(empty($_GET["search"]))) {
     $restaurants = array_merge($byName, $byType, $byCity);
 }
 
-// function nextLimit() {
-//     ($GET_["limit"]) ? $limit = $GET_["limit"] * 10 : $limit = 10;
-// }
-// (empty($GET_["inc"])) ? false : nextLimit();
 
 if (empty($_GET["search"])) {
-    $restaurants = DBconnector::getAllRestaurants(null);
+    $restaurants = DBconnector::getAllRestaurants($limit);
 } else {
     null;
 }  
@@ -73,13 +74,19 @@ link_to_css('static/decouverte.css');
             echo $render->decouvrir();
             ?>
         </section>
-        <section>
-            <!-- <div class="more">
-                <form action="GET">
-                    <input type="hidden" name="inc" value=>
+        <div class="more">
+                <form method="GET" action="decouverte.php" >
+                    <?php echo "<input type='hidden' name='inc' value='". $limit+10 ."'>"; ?>
+                    <button type="submit" class="more-btn"><span class="text">Voir plus</span><span>Découvrir </span></button>
                 </form>
-                <button type="submit" id="more-btn">Voir plus</button>
-            </div> -->
+        </div>
+        <section>
+            <h2>Les grands favoris</h2>
+            <?php 
+            $restaurants_moyenne = DBConnector::getFavorisByStars();
+            $render_moyenne = new Restaurant_render($restaurants_moyenne);
+            $render_moyenne->moyenne();
+            ?>
         </section>
     </main>
     <?php include('interfaces-role/global/footer.php') ?>
