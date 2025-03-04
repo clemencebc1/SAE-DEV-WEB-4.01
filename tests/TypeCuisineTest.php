@@ -1,7 +1,6 @@
 <?php
 use classes\model\TypeCuisine;
 use PHPUnit\Framework\TestCase;
-require_once 'vendor/autoload.php';
 
 class TypeCuisineTest extends TestCase {
     public function testGetId(){

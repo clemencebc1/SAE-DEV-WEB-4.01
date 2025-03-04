@@ -5,7 +5,6 @@ use classes\model\Restaurant;
 use classes\model\TypeCuisine;
 use classes\model\User;
 use PHPUnit\Framework\TestCase;
-require_once 'vendor/autoload.php';
 
 class CritiqueTest extends TestCase {
     public function testGetId(){

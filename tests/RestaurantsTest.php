@@ -3,7 +3,6 @@ use classes\model\TypeCuisine;
 use PHPUnit\Framework\TestCase;
 use classes\model\Restaurant;
 use classes\model\Departement;
-require_once 'vendor/autoload.php';
 
 
 class RestaurantsTest extends TestCase {
