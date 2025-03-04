@@ -77,6 +77,20 @@ class DBConnector {
     }
 
     /**
+     * get tous les users dans la base de donnees
+     */
+    public static function get_users(): array{
+        $query = self::getInstance()->prepare('Select * from public."Visiteur"');
+        $query->execute();
+        $result = $query->fetchAll();
+        $all_users = [];
+        foreach ($result as $user){
+            $all_users[] = new User($user['mail'], $user['password'], $user['nom_user'], $user['prenom'], $user['role'], array());
+        }
+        return $all_users;
+    }
+
+    /**
      * Recupere un utilisateur
      * @param string $username L'adresse mail de l'utilisateur.
      * @param string $nom Le nom de l'utilisateur.
