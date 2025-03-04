@@ -26,7 +26,7 @@
                 <section class="search">
                     <div class="search-bar">
                         <img src="img/loupe.png" alt="Recherche" class="search-icon">
-                        <input type="search" id="input-search" placeholder=" Rechercher un restaurant" />
+                        <input type="search" id="input-search" placeholder="Rechercher un restaurant" />
                         <button type="submit" id="button-search"> Rechercher</button>
                     </div>
                     <div class="search-filter">
