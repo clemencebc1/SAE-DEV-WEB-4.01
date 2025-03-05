@@ -5,7 +5,6 @@ Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use utils\render\Restaurant_render;
-UserTools::requireLogin();
 
 ?>
 

@@ -77,6 +77,20 @@ class DBConnector {
     }
 
     /**
+     * get tous les users dans la base de donnees
+     */
+    public static function get_users(): array{
+        $query = self::getInstance()->prepare('Select * from public."Visiteur"');
+        $query->execute();
+        $result = $query->fetchAll();
+        $all_users = [];
+        foreach ($result as $user){
+            $all_users[] = new User($user['mail'], $user['password'], $user['nom_user'], $user['prenom'], $user['role'], array());
+        }
+        return $all_users;
+    }
+
+    /**
      * Recupere un utilisateur
      * @param string $username L'adresse mail de l'utilisateur.
      * @param string $nom Le nom de l'utilisateur.
@@ -184,12 +198,19 @@ class DBConnector {
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
-    public static function getAllRestaurants(int | null  $limit): array {
+    public static function getAllRestaurants(int | null  $limit, int | null $type): array {
         if ($limit == null){
             $limit = 10;
         }
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
-        $query->execute(array('limit' => $limit));
+        if (!empty($type)) {
+            $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE id_cuisine = :type ORDER BY nom Limit :limit');
+            $query->execute(array('type' => $type, 'limit' => $limit));
+        } else {
+            $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+            $query->execute(array('limit' => $limit));
+        }
+        // $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" ORDER BY nom Limit :limit');
+        // $query->execute(array('limit' => $limit));
         $result = $query->fetchAll();
         $all_restaurants = [];
         foreach ($result as $restaurant) {
@@ -622,7 +643,16 @@ class DBConnector {
     return $result;
 }
 
-   
-
+    /**
+     * propose des nom de restaurant en suggestion
+     * @return array String nom des restaurants
+     */
+   public static  function getSuggestions($initialSequence, $limit) {
+    $stmt = 'SELECT nom FROM public."Restaurant" WHERE nom LIKE :initialSequence LIMIT :limit';
+    $query = self::getInstance()->prepare($stmt);
+    $query->execute(['initialSequence' => $initialSequence . '%', 'limit' => $limit]);
+    $result = $query->fetchAll();
+    return $result;
+   }
 }
 ?>

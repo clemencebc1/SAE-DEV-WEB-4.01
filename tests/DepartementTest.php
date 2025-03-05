@@ -1,7 +1,6 @@
 <?php
 use classes\model\Departement;
 use PHPUnit\Framework\TestCase;
-require_once 'vendor/autoload.php';
 
 class DepartementTest extends TestCase {
     public function testGetId(){

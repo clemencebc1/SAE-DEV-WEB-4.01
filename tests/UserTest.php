@@ -1,7 +1,6 @@
 <?php
 use classes\model\User;
 use PHPUnit\Framework\TestCase;
-require_once 'vendor/autoload.php';
 
 class UserTest extends TestCase {
     public function testGetMail(){

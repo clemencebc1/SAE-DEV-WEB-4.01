@@ -1,8 +1,6 @@
 <?php
 use classes\model\Caracteristique;
 use PHPUnit\Framework\TestCase;
-require_once 'vendor/autoload.php';
-
 class CaracteristiqueTest extends TestCase {
     public function testGetId(){
         $caracteristique = new Caracteristique(1, "wifi");
