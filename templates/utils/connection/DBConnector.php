@@ -186,7 +186,7 @@ class DBConnector {
     */
     public static function getCaracteristiquesByRestaurant(int $restaurant_id): array {
         $caracteristiques = [];
-        $sql = 'SELECT c.id_carac, c.carac FROM public."Caractéristique" c JOIN public."Caractériser" cr ON c.id_carac = cr.id_carac WHERE cr.id_restaurant = :restaurant_id';
+        $sql = 'SELECT c.id_carac, c.carac FROM public."Caractéristique" c JOIN public."Caracteriser" cr ON c.id_carac = cr.id_carac WHERE cr.id_resto = :restaurant_id';      
         $stmt = self::getInstance()->prepare($sql);
         $stmt->execute(['restaurant_id' => $restaurant_id]);
         $rows = $stmt->fetchAll();

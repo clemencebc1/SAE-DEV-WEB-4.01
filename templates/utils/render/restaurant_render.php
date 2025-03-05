@@ -27,11 +27,26 @@ class Restaurant_render extends Render {
             echo"</div>";
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
-                    echo "<p><strong>Adresse :</strong> " . ($restaurant->getAdresse() ? $restaurant->getAdresse() : "Non renseignée") . "</p>";
                     $typeCuisine = $restaurant->getTypeCuisine();
                     echo "<p><strong>Type de cuisine :</strong> " . ($typeCuisine ? $typeCuisine->getCuisine() : "Non renseigné") . "</p>";
+                    echo "<p><strong>Inclus : </strong>";
+                    $caracteristiques = DBConnector::getCaracteristiquesByRestaurant($restaurant->getId());
+                    if (!empty($caracteristiques)) {
+                        $count = count($caracteristiques);
+                        for ($i = 0; $i < $count; $i++) {
+                            echo htmlspecialchars($caracteristiques[$i]->getMessage());
+                            // Ajouter une virgule sauf pour le dernier élément
+                            if ($i < $count - 1) {
+                                echo ", ";
+                            }
+                        }
+                    } else {
+                        echo "Non renseigné";
+                    }
+                    echo "</p>";
                     echo "<p><strong>Nombre d'étoiles :</strong> " . ($restaurant->getNbEtoile() ?? "Non renseigné") . "</p>";
                     echo "<p><strong>Capacité :</strong> " . ($restaurant->getCapacity() ?? "Non renseignée") . "</p>";
+                    echo "<p><strong>Adresse :</strong> " . ($restaurant->getAdresse() ? $restaurant->getAdresse() : "Non renseignée") . "</p>";
                     $departement = $restaurant->getDepartement();
                     echo "<p><strong>Département :</strong> " . ($departement ? $departement->getNomdep() : "Non renseigné") . "</p>";
                     $website = $restaurant->getWebsite();
