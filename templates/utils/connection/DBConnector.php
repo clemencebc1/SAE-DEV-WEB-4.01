@@ -181,6 +181,22 @@ class DBConnector {
     }
 
     /**
+    * get toutes les caracteristiques d'un restaurant donné
+    * @return array
+    */
+    public static function getCaracteristiquesByRestaurant(int $restaurant_id): array {
+        $caracteristiques = [];
+        $sql = 'SELECT c.id_carac, c.carac FROM public."Caractéristique" c JOIN public."Caractériser" cr ON c.id_carac = cr.id_carac WHERE cr.id_restaurant = :restaurant_id';
+        $stmt = self::getInstance()->prepare($sql);
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+        $rows = $stmt->fetchAll();
+        foreach ($rows as $result) {
+            $caracteristiques[] = new Caracteristique($result['id_carac'], $result['carac']);
+        }
+        return $caracteristiques;
+    }
+    
+    /**
      * Récupère tous les restaurants de la base de données.
      * @return array[Restaurant]  Les restaurants de la base de données.
      */
