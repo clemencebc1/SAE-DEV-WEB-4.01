@@ -18,28 +18,26 @@ class Restaurant_render extends Render {
             echo"<h1>Détails du restaurant <span>". $restaurant->getNom() ."</span></h1>";
         echo"</section>";
         echo"<section>";
-            echo"<div class='image_nom'>";
-                echo"<div class='image'>";
-                echo"</div>";
-                echo"<div class='nom'>";
-                echo"</div>";
+            echo"<div class='image'>";
+                if ($restaurant->getPhotos()) {
+                    echo "<img src='" . $restaurant->getPhotos() . "' alt='Photo de " . $restaurant->getNom() . "'>";
+                } else {
+                    echo "<p>Aucune image disponible</p>";
+                }
             echo"</div>";
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
-                    echo"<p>Adresse : ". $restaurant->getAdresse() ."</p>";
-                    echo"<p>Type de cuisine : ";
-                    $type = $restaurant->getTypeCuisine();
-                    if (isset($type)){
-                        $restaurant->getTypeCuisine()->getCuisine();
+                    echo "<p><strong>Adresse :</strong> " . ($restaurant->getAdresse() ? $restaurant->getAdresse() : "Non renseignée") . "</p>";
+                    $typeCuisine = $restaurant->getTypeCuisine();
+                    echo "<p><strong>Type de cuisine :</strong> " . ($typeCuisine ? $typeCuisine->getCuisine() : "Non renseigné") . "</p>";
+                    echo "<p><strong>Nombre d'étoiles :</strong> " . ($restaurant->getNbEtoile() ?? "Non renseigné") . "</p>";
+                    echo "<p><strong>Capacité :</strong> " . ($restaurant->getCapacity() ?? "Non renseignée") . "</p>";
+                    $departement = $restaurant->getDepartement();
+                    echo "<p><strong>Département :</strong> " . ($departement ? $departement->getNomdep() : "Non renseigné") . "</p>";
+                    $website = $restaurant->getWebsite();
+                    if (!empty($website)) {
+                        echo "<p><strong>Site web :</strong> <a href='" . htmlspecialchars($website) . "' target='_blank'>" . htmlspecialchars($restaurant->getNom()) . "</a></p>";
                     }
-                    else{
-                        echo "Non renseigné";
-                    }
-                    echo " </p>";
-                    echo"<p>Inclus : ". " </p>";
-                    echo "<p>Nombre d'étoiles : ". $restaurant->getNbEtoile() ."</p>";
-                    echo"<p>Capacité : ". $restaurant->getCapacity()  ."</p>";
-                    echo"<p>Site web : <a href='". $restaurant->getWebsite().  "'>". $restaurant->getNom(). "</a> </p>";
                 echo"</div>";
             echo"</div>";
         echo"</section>";
