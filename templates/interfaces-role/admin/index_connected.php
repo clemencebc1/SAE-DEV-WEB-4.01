@@ -10,8 +10,5 @@ $users = DBConnector::get_users();
 
 ?>
 <div>
-    <?php foreach ($users as $user){
-        echo "<p>".$user->getNom()."</p>";
-        }?>
 </div>
 

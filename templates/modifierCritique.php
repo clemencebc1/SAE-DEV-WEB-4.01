@@ -17,7 +17,12 @@ link_to_css('static/modifierCritique.css');
 ?>
 <body>
         <?php include('interfaces-role/global/header_connected.php'); 
-        $id_critique = intval($_POST['id_critique']);
+        if (isset($_POST['id_critique'])) {
+            $id_critique = intval($_POST['id_critique']);
+        }
+        else {
+            $id_critique = intval($_GET['id_critique']);
+        }
         $critique = DBConnector::getCritique($id_critique)?>
         <main>
             <div class="container">

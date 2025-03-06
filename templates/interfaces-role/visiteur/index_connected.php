@@ -4,61 +4,46 @@ Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use utils\render\Restaurant_render;
-$all_carac = DBConnector::getCaracteristique();
+
 $dernier_restaurant = DBConnector::getLatestRestaurant($_SESSION['user']['username']);
-$categories = DBConnector::getAllType();
 $dernier_restau_render = new Restaurant_render([$dernier_restaurant]);
-link_to_js('static/js/boutons-bar.js');
+link_to_css('static/index_connected.css');
+link_to_css('static/decouverte.css');
+include('utils/render/searchRender.php');
+
+$all_types = DBconnector::getAllType();
 ?>
-
-        <div class="container">
+    <div class="container">
         <div class="last-review">
-            <h2>Vous avez testé récemment ? <a href="ajouterCritique.php?id=<?= $dernier_restaurant->getId() ?>">Laissez un avis !</a></h2>
-            <?php $dernier_restau_render->iconRestaurant(false);?>
+            <?php if ($dernier_restaurant != null) { ?>
+            <h2>Vous avez testé récemment <a href="ajouterCritique.php?id=<?= $dernier_restaurant->getId() ?>">et donné un avis</a></h2>
+            <?php $dernier_restau_render->iconRestaurant(false);}?>
         </div>
-
-        <div class="search-section">
-            <div class="search-bar">
-            <input type="text" id="searchBar" placeholder="Rechercher un restaurant..." autocomplete="off">
-                <button>Rechercher</button>
-            </div>
-
-            <div class="filters">
-                <div class="dropdown">
-                    <button class="dropbtn">🍽️ Caractéristique ▼</button>
-                    <div class="dropdown-content">
-                        <?php 
-                        $cpt = count($all_carac);
-                        if (count($all_carac)>5){
-                            $cpt = 5;
-                        }
-                        for($i = 0; $i<$cpt;$i++){
-                            $restaurant = $all_carac[$i]->getMessage();
-                            echo "<a href='#' class='restaurant-item' data-restaurant='" . $restaurant . "'>" . $restaurant . "</a>";
-                        }?>
+        <div id="search-container">
+                <form action="decouverte.php" method="get">
+                    <div id='search-box'>
+                        <input type="text" name="search" id="search" placeholder="Ville, Restaurant, type de cuisine.." value="<?php if(isset($_GET['search'])) echo $_GET['search']; ?>">
+                        <select name="type" id="type">
+                            <option value="">Type de cuisine</option>
+                            <?php foreach ($all_types as $type) : ?>
+                                <option value="<?php echo $type->getId(); ?>"><?php echo $type->getCuisine(); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit">Rechercher</button>
                     </div>
-                </div>
-
-                <div class="dropdown">
-                    <button class="dropbtn">🥄 Cuisine ▼</button>
-                    <div class="dropdown-content">
-                    <?php 
-                        $cpt = count($categories);
-                        if (count($categories)>5){
-                            $cpt = 5;
-                        }
-                    
-                        for ($i = 0; $i < $cpt; $i++) {
-                            $cuisine = $categories[$i]->getCuisine();
-                            echo "<a href='#' class='category-item' data-cuisine='" . $cuisine . "'>" . $cuisine . "</a>";
-                        }?>
+                </form>
+            </div>
+            <?php if (!empty($_GET['search'])) :?>
+            <div id="search-suggestions">
+                <form action="" method="GET">
+                    <div id="suggestions">
+                        <h3>Vous cherchez ?</h3>
+                        <?php echo renderSuggestionsForm();?>
                     </div>
-                </div>
-
+                </form>
             </div>
-
-            <div id="selected-filters"></div>
-            </div>
-            </div>      
+            <?php endif; ?>
+        </section>
+        </div>
    <h3 id="decouverte">Pas d'idées ? <a href="decouverte.php">Faites des découvertes !</a></h3>
 
