@@ -48,9 +48,9 @@ if (!(empty($_GET["search"]))) {
         for ($i = 0; $i < count($restaurants); $i++) {
             $typeCuisine = $restaurants[$i]->getTypeCuisine();
             if ($typeCuisine !== null) {
-                $condition = ($_GET["type"] == $typeCuisine->getId());
+                $condition = ($_GET["type"] == $typeCuisine ->getId());
                 echo var_dump($condition);
-                if ($condition) {
+                if (!$condition) {
                     unset($restaurants[$i]);
                 }
             }else {
