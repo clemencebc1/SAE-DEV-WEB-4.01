@@ -115,6 +115,34 @@ class Restaurant {
         return $this->id === $restaurant->getId();
     }
 
+    function getRestaurantInfoByCo(float $lat, float $lon):array {
+        $url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon";
+        $options = [
+            "http" => [
+                "method" => "GET",
+                "header" => "User-Agent: PHP\r\n"
+            ]
+        ];
+        
+        $context = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+        
+        if ($response === FALSE) {
+            die('Error');
+        }
+        
+        $dataResto = json_decode($response, true);
+        return $dataResto;
+    }
+    
+    function formatAdresse($dataResto):string {
+        return ($dataResto["address"]["house_number"] ?? '') ." ".
+        ($dataResto["address"]["retail"] ?? 'rue ..?') ." ".
+        ($dataResto["address"]["city"] ?? '') ." ".
+        ($dataResto["address"]["postcode"] ?? '') ." ".
+        ($dataResto["address"]["country"] ?? '');
+    }
+
 }
 
 ?>

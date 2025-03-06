@@ -77,5 +77,14 @@ final class DataLoaderJson implements DataLoaderInterface {
         return null;
     }
 
+    function addGpsCoordinates(){
+        foreach($this->data as $resto){
+            $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
+            $lat = $resto['latitude'];
+            $long = $resto['longitude'];
+            DBConnector::insertCoordinates($idResto, $lat, $long);
+        }
+    }
+
 }
 ?>
