@@ -30,7 +30,16 @@ final class DataLoaderJson implements DataLoaderInterface {
             $region = $resto['code_departement'];
             $nbetoile = $resto['stars'] ?? 0;
             $horaires = $resto['opening_hours'];
-            $result = DBConnector::insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $nbetoile, $horaires);
+            $gps_lat = isset($resto['geo_point_2d']['lat']) ? (float)$resto['geo_point_2d']['lat'] : null;
+            $gps_long = isset($resto['geo_point_2d']['lon']) ? (float)$resto['geo_point_2d']['lon'] : null;
+            
+            // Debugging statements
+            error_log("gps_lat: " . var_export($gps_lat, true));
+            error_log("gps_long: " . var_export($gps_long, true));
+            error_log("gps_lat type: " . gettype($gps_lat));
+            error_log("gps_long type: " . gettype($gps_long));
+            
+            $result = DBConnector::insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $nbetoile, $horaires, $gps_lat, $gps_long);
             if (!($result)){
                 break;
             }
@@ -77,14 +86,14 @@ final class DataLoaderJson implements DataLoaderInterface {
         return null;
     }
 
-    function addGpsCoordinates(){
-        foreach($this->data as $resto){
-            $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
-            $lat = $resto['latitude'];
-            $long = $resto['longitude'];
-            DBConnector::insertCoordinates($idResto, $lat, $long);
-        }
-    }
+    // function addGpsCoordinates(){
+    //     foreach($this->data as $resto){
+    //         $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
+    //         $lat = $resto['latitude'];
+    //         $long = $resto['longitude'];
+    //         DBConnector::insertCoordinates($idResto, $lat, $long);
+    //     }
+    // }
 
 }
 ?>

@@ -259,7 +259,7 @@ class DBConnector {
      * @return mixed objet restaurant
      */
     public static function getRestaurantByName($nom): mixed {
-        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant" natural left join public."Photo" WHERE nom = :nom');
+        $query = self::getInstance()->prepare('SELECT * FROM public."Restaurant2" natural left join public."Photo" WHERE nom = :nom');
         $query->execute(array('nom' => $nom));
         $result = $query->fetch();
         if ($result){
@@ -270,6 +270,8 @@ class DBConnector {
                 $result['website'] ?? '', 
                 $result['capacity'] ?? 0, 
                 $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
+                (float) $result['gps_lat'] ?? null,
+                (float) $result['gps_long'] ?? null,
                 self::getDepartementById($result['region_id']),
                 $result['url'] ?? '',
                 self::getTypeCuisineById($result['id_cuisine']) ?? new TypeCuisine(0, ''));
@@ -546,9 +548,9 @@ class DBConnector {
     * @param mixed $horaires horaires
     * @return bool true si l'ajout a réussi, false sinon.
     */
-   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires): bool{
-    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires)');
-    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires));
+   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires, $gps_lat, $gps_long): bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant2" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires, gps_lat, gps_long) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires, :gps_lat, :gps_long)');
+    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires, 'gps_lat' => $gps_lat, 'gps_long' => $gps_long));
     return $result;
    }
 
@@ -562,7 +564,7 @@ class DBConnector {
     if (!isset($id_resto) || !isset($id_carac)){
         return false;
    }
-    $query = self::getInstance()->prepare('INSERT INTO public."Caracteriser" (id_carac, id_resto) VALUES (:id_carac, :id_resto)');
+    $query = self::getInstance()->prepare('INSERT INTO public."caracteriser2" (id_carac, id_resto) VALUES (:id_carac, :id_resto)');
     $result = $query->execute(array('id_carac' => $id_carac, 'id_resto' => $id_resto));
     return $result;
    }

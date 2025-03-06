@@ -10,17 +10,32 @@ class Restaurant {
     private string | null $website;
     private int | null $capacity;
     private int | null $nbetoile;
+    private float | null $gps_lat;
+    private float | null $gps_long;
     private TypeCuisine | null $type_cuisine;
     private Departement | null $dep;
     private mixed $photos;
 
-    public function __construct(int $id, string $nom, string $adresse, string $website, int $capacity, int $nbetoile, Departement | null $departement, mixed $url, TypeCuisine | null  $type_cuisine){
+    public function __construct(
+            int $id, string $nom, 
+            string | null $adresse, 
+            string | null $website, 
+            int | null $capacity, 
+            int | null $nbetoile, 
+            float | null $gps_lat, 
+            float | null $gps_long, 
+            Departement | null $departement,
+            mixed $url, 
+            TypeCuisine | null  $type_cuisine
+        ){
         $this->id = $id;
         $this->nom = $nom;
         $this->adresse = $adresse;
         $this->website = $website;
         $this->capacity = $capacity;
         $this->nbetoile = $nbetoile;
+        $this->gps_lat = $gps_lat;
+        $this->gps_long = $gps_long;
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
         $this->photos = $url;
@@ -80,6 +95,22 @@ class Restaurant {
      */
     public function getTypeCuisine(): mixed {
         return $this->type_cuisine;
+    }
+
+    /**
+     * Get la latitude du restaurant
+     * @return float
+     */
+    public function getGpsLat(): float {
+        return $this->gps_lat;
+    }
+
+    /**
+     * Get la longitude du restaurant
+     * @return float
+     */
+    public function getGpsLong(): float {
+        return $this->gps_long;
     }
 
     /**
