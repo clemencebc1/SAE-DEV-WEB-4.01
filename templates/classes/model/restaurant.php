@@ -146,6 +146,11 @@ class Restaurant {
         return $this->id === $restaurant->getId();
     }
 
+    public function getCoordinatesAdressFromAPI() {
+        $data = $this->getRestaurantInfoByCo($this->gps_lat, $this->gps_long);
+        return $this->formatAdresse($data);
+    }
+
     function getRestaurantInfoByCo(float $lat, float $lon):array {
         $url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon";
         $options = [

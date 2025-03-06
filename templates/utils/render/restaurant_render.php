@@ -26,7 +26,7 @@ class Restaurant_render extends Render {
             echo"</div>";
             echo"<div class='details_lien'>";
                 echo"<div class='details'>";
-                    echo"<p>Adresse : ". $restaurant->getAdresse() ."</p>";
+                    echo"<p>Adresse : ". $restaurant->getCoordinatesAdressFromAPI() ."</p>";
                     echo"<p>Type de cuisine : ";
                     $type = $restaurant->getTypeCuisine();
                     if (isset($type)){
