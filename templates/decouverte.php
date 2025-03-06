@@ -53,6 +53,8 @@ if (!(empty($_GET["search"]))) {
                 if ($condition) {
                     unset($restaurants[$i]);
                 }
+            }else {
+                unset($restaurants[$i]);
             }
         }
     }  
