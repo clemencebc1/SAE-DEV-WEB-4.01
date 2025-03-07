@@ -555,9 +555,9 @@ class DBConnector {
     * @param mixed $horaires horaires
     * @return bool true si l'ajout a réussi, false sinon.
     */
-   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires, $gps_lat, $gps_long, $idCuisine): bool{
-    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant2" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires, gps_lat, gps_long, id_cuisine) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires, :gps_lat, :gps_long, :cuisine)');
-    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires, 'gps_lat' => $gps_lat, 'gps_long' => $gps_long, 'cuisine' =>  $idCuisine));
+   public static function insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $etoiles, $horaires, $gps_lat, $gps_long, $idCuisine, $adress): bool{
+    $query = self::getInstance()->prepare('INSERT INTO public."Restaurant2" (nom, capacity, tel, siret, website, region_id, nb_etoile, horaires, gps_lat, gps_long, id_cuisine, adresse) VALUES (:name, :capacity, :tel, :siret, :website, :region, :etoiles, :horaires, :gps_lat, :gps_long, :cuisine, :adress)');
+    $result = $query->execute(array('name' => $name, 'capacity' => $capacity, 'tel' => $tel, 'siret' => $siret, 'website' => $website, 'region' => $region, 'etoiles' => $etoiles, 'horaires' => $horaires, 'gps_lat' => $gps_lat, 'gps_long' => $gps_long, 'cuisine' =>  $idCuisine, 'adress' => $adress));
     return $result;
    }
 

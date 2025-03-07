@@ -9,6 +9,7 @@ class Restaurant {
     private string | null $website;
     private int | null $capacity;
     private int | null $nbetoile;
+    private string | null $adresse;
     private float | null $gps_lat;
     private float | null $gps_long;
     private TypeCuisine | null $type_cuisine;
@@ -33,6 +34,11 @@ class Restaurant {
         $this->nbetoile = $nbetoile;
         $this->gps_lat = $gps_lat;
         $this->gps_long = $gps_long;
+        if ($adress !== null) {
+            $this->adresse = $adress;
+        }else {
+            $this->adresse = $this->getCoordinatesAdressFromAPI();
+        } 
         $this->type_cuisine = $type_cuisine;
         $this->dep = $departement;
         $this->photos = $url;
@@ -52,6 +58,14 @@ class Restaurant {
      */
     public function getId(): int{
         return $this->id;
+    }
+
+    /**
+     * Get l'adresse du restaurant
+     * @return string
+     */
+    public function getAdresse(): string {
+        return $this->adresse;
     }
 
     /**

@@ -15,6 +15,34 @@ final class DataLoaderJson implements DataLoaderInterface {
         return $this->data;
     }
 
+    function getRestaurantInfoByCo(float $lat, float $lon):array {
+        $url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lon";
+        $options = [
+            "http" => [
+                "method" => "GET",
+                "header" => "User-Agent: PHP\r\n"
+            ]
+        ];
+        
+        $context = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+        
+        if ($response === FALSE) {
+            die('Error');
+        }
+        
+        $dataResto = json_decode($response, true);
+        return $dataResto;
+    }
+    
+    function formatAdresse($dataResto):string {
+        return ($dataResto["address"]["house_number"] ?? '') ." ".
+        ($dataResto["address"]["retail"] ?? 'rue ..?') ." ".
+        ($dataResto["address"]["city"] ?? '') ." ".
+        ($dataResto["address"]["postcode"] ?? '') ." ".
+        ($dataResto["address"]["country"] ?? '');
+    }
+
     /**
      * ajout des données dans la base de données
      * @param mixed $pdo pour ajouter les données dans la base de données
@@ -65,8 +93,10 @@ final class DataLoaderJson implements DataLoaderInterface {
             error_log("gps_lat type: " . gettype($gps_lat));
             error_log("gps_long type: " . gettype($gps_long));
            
+            $apiAdress = $this->getRestaurantInfoByCo($gps_lat, $gps_long);
+            $adress = $this->formatAdresse($apiAdress);
             
-            $result = DBConnector::insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $nbetoile, $horaires, $gps_lat, $gps_long,  $idCuisine);
+            $result = DBConnector::insertRestaurant($name, $capacity, $tel, $siret, $website, $region, $nbetoile, $horaires, $gps_lat, $gps_long, $idCuisine, $adress);
             if (!($result)){
                 break;
             }
