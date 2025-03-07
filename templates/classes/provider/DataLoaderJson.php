@@ -23,6 +23,7 @@ final class DataLoaderJson implements DataLoaderInterface {
     function insertData(){
         $allCuisine = array();
         $Allresto = array();
+        $Allcarac = array();
 
         foreach($this->data as $resto){
             $name = $resto['name'];
@@ -86,20 +87,15 @@ final class DataLoaderJson implements DataLoaderInterface {
         $caracteristiques = ['wheelchair', 'vegetarian', 'vegan', 'delivery', 'takeaway', 'internet_access', 'stars', 'smoking'];
         foreach ($caracteristiques as $carac){
             $nameCarac = false;
-            if ($carac == 'wheelchair'){
-                if ($resto[$carac] != 'no'){
-                    $nameCarac = 'wheelchair';
+            $caracCondition = $resto[$carac] != null;
+            if ($caracCondition){
+                if ($resto[$carac] == "yes"){
+                    $nameCarac = $carac;
+                    $idCarac = $this->caracByName($nameCarac);
+                    $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
+                    DBConnector::insertCaracteriserRestaurant($idResto, $idCarac);
                 }
             }
-            else {
-                $nameCarac = $resto[$carac] == 'yes' ? $carac : null;
-            }
-               
-            if ($nameCarac){
-                $idCarac = $this->caracByName($nameCarac);
-                $idResto = DBConnector::getRestaurantByName($resto['name'])->getId();
-                DBConnector::insertCaracteriserRestaurant($idResto, $idCarac);
-            }   
         }
     }
     /**

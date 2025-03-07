@@ -6,7 +6,6 @@ use classes\model\TypeCuisine;
 class Restaurant {
     private int $id;
     private string | null $nom;
-    private string | null $adresse;
     private string | null $website;
     private int | null $capacity;
     private int | null $nbetoile;
@@ -18,7 +17,6 @@ class Restaurant {
 
     public function __construct(
             int $id, string $nom, 
-            string | null $adresse, 
             string | null $website, 
             int | null $capacity, 
             int | null $nbetoile, 
@@ -30,7 +28,6 @@ class Restaurant {
         ){
         $this->id = $id;
         $this->nom = $nom;
-        $this->adresse = $adresse;
         $this->website = $website;
         $this->capacity = $capacity;
         $this->nbetoile = $nbetoile;
@@ -55,14 +52,6 @@ class Restaurant {
      */
     public function getId(): int{
         return $this->id;
-    }
-
-    /**
-     * Get l'adresse du restaurant
-     * @return string
-     */
-    public function getAdresse(): string {
-        return $this->adresse;
     }
 
     /**

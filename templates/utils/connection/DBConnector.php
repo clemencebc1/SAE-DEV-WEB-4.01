@@ -217,7 +217,6 @@ class DBConnector {
             $all_restaurants[] = new Restaurant(
                 $restaurant['id_resto'], 
                 $restaurant['nom'], 
-                $restaurant['adresse'] ?? '', 
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
@@ -245,7 +244,6 @@ class DBConnector {
         $restaurant = new Restaurant(
             $result['id_resto'], 
             $result['nom'], 
-            $result['adresse'] ?? '', 
             $result['website'] ?? '', 
             $result['capacity'] ?? 0, 
             $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
@@ -270,7 +268,6 @@ class DBConnector {
             $restaurant = new Restaurant(
                 $result['id_resto'], 
                 $result['nom'], 
-                $result['adresse'] ?? '', 
                 $result['website'] ?? '', 
                 $result['capacity'] ?? 0, 
                 $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
@@ -294,7 +291,6 @@ class DBConnector {
             $all_restaurants[] = new Restaurant(
                 $restaurant['id_resto'], 
                 $restaurant['nom'], 
-                $restaurant['adresse'] ?? '', 
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
@@ -320,8 +316,7 @@ class DBConnector {
         foreach ($result as $restaurant) {
             $all_restaurants[] = new Restaurant(
                 $restaurant['id_resto'], 
-                $restaurant['nom'], 
-                $restaurant['adresse'] ?? '', 
+                $restaurant['nom'],  
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
@@ -351,8 +346,7 @@ class DBConnector {
             foreach ($result as $restaurant) {
                 $all_restaurants[] = new Restaurant(
                     $restaurant['id_resto'], 
-                    $restaurant['nom'], 
-                    $restaurant['adresse'] ?? '', 
+                    $restaurant['nom'],  
                     $restaurant['website'] ?? '', 
                     $restaurant['capacity'] ?? 0, 
                     $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
@@ -381,7 +375,6 @@ class DBConnector {
             $all_restaurants[] = new Restaurant(
                 $restaurant['id_resto'], 
                 $restaurant['nom'], 
-                $restaurant['adresse'] ?? '', 
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
@@ -420,8 +413,7 @@ class DBConnector {
         $result = $query->fetch();
         $restaurant = new Restaurant(
             $result['id_resto'], 
-            $result['nom'], 
-            $result['adresse'] ?? '', 
+            $result['nom'],  
             $result['website'] ?? '', 
             $result['capacity'] ?? 0, 
             $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0, 
@@ -504,10 +496,11 @@ class DBConnector {
             $all_restaurants[] = new Restaurant(
                 $restaurant['id_resto'], 
                 $restaurant['nom'], 
-                $restaurant['adresse'] ?? '', 
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                (float) $result['gps_lat'] ?? null,
+                (float) $result['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
                 $restaurant['url'] ?? '',
                 self::getTypeCuisineById($restaurant['id_cuisine']));
