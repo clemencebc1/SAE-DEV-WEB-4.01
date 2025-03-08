@@ -578,6 +578,9 @@ class DBConnector {
     $query = self::getInstance()->prepare('SELECT MAX(id_critique) FROM public."Critique"');
     $query->execute();
     $result = $query->fetch();
+    if ($result['max']== null){
+        return 0;
+    }
     return $result['max'];
    }
 
