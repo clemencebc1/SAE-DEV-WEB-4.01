@@ -38,12 +38,14 @@ Si une erreur du type ``` Error: Class "classes\model\Departement" not found ```
 + module d'inscription
 + module de connexion
 + module de recherche
-+ module de visualisation des caractéristiques d'un restaurants
-+ plusieurs rôles admin/utilisateur/restaurateur
++ module de visualisation des caractéristiques d'un restaurants (les meilleurs restaurants, par ordre alphabétique, en fonction des recherches)
++ plusieurs rôles admin/utilisateur
 + ajouter/modifier/supprimer une critique pour un utilisateur connecté
-+ accéder à son profil en tant qu'utilisateur connecté
++ accéder à son profil en tant qu'utilisateur connecté (modifier nom, prénom, mot de passe, stats type préféré..)
 + lire les critiques et notes pour un restaurant
 + ajouter/supprimer des restaurants aux favoris pour un utilisateur connecté
++ supprimer des critiques pour un admin
++ Espace provider, téléverser un fichier JSON pour un admin
 
 ## Annexe
 - les données utilisées proviennent en partie de [https://www.data.gouv.fr/]
