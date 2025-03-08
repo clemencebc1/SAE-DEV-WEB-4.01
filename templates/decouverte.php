@@ -8,27 +8,7 @@ use classes\model\Departement;
 use classes\model\Restaurant;
 use classes\model\Critique;
 use utils\render\Restaurant_render;
-
-function renderSuggestionsForm() {
-    $html = "<form action='' method='GET'>";
-    $html .= suggestionProposition($_GET['search'], 5);
-    $html .= "</form>";
-    return $html;
-}
-
-function renderSuggestionsButton($value) {
-    return "<button type='submit' name='search' value='$value'>$value</button>";
-}
-
-function suggestionProposition($initialSequence, $limit){
-    $suggestions = DBconnector::getSuggestions($initialSequence, $limit);
-    $html = "";
-    foreach ($suggestions as $suggestion) {
-        $html .= renderSuggestionsButton($suggestion['nom']);
-    }
-    return $html;
-}
-
+include('utils/render/searchRender.php');
 if (isset($_GET['inc'])) {
     $limit = intval($_GET['inc']);
 }

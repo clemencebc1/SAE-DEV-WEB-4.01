@@ -411,12 +411,15 @@ class DBConnector {
     /**
      * Récupere le dernier restaurant visité par un utilisateur.
      * @param string $user L'adresse mail de l'utilisateur.
-     * @return Restaurant le restaurant en question.
+     * @return mixed le restaurant en question.
      */
-    public static function getLatestRestaurant($user): Restaurant {
-        $query = self::getInstance()->prepare('SELECT nom, id_resto, url, adresse, website, capacity, nb_etoile, id_cuisine, region_id, gps_lat, gps_long FROM public."Critique" natural join public."Restaurant"  natural join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
+    public static function getLatestRestaurant($user): mixed {
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, url, adresse, website, capacity, nb_etoile, id_cuisine, region_id FROM public."Critique" natural join public."Restaurant"  natural left join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
         $query->execute(['user' => $user]);
         $result = $query->fetch();
+        if (!$result) {
+            return null;
+        }
         $restaurant = new Restaurant(
             $result['id_resto'], 
             $result['nom'],  
@@ -602,6 +605,9 @@ class DBConnector {
     $query = self::getInstance()->prepare('SELECT MAX(id_critique) FROM public."Critique"');
     $query->execute();
     $result = $query->fetch();
+    if ($result['max']== null){
+        return 0;
+    }
     return $result['max'];
    }
 
@@ -658,7 +664,7 @@ class DBConnector {
     * @return array
     */
    public static function getFavorisByStars(){
-    $stmt =   'SELECT r.id_resto, r.nom, r.adresse, COALESCE(AVG(c.etoiles), 0) AS moyenne_etoiles
+    $stmt =   'SELECT r.id_resto, r.nom, r.adresse, COALESCE(AVG(c.etoiles), 0) AS moyenne_etoiles, COALESCE(COUNT(c.id_critique), 0) AS nombre_critiques
     FROM public."Restaurant" r
     LEFT JOIN public."Critique" c ON r.id_resto = c.id_resto
     GROUP BY r.id_resto, r.nom
