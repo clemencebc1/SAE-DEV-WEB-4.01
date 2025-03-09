@@ -150,8 +150,9 @@ class Restaurant_render extends Render {
                 }
                 echo "<div class='restaurant-info'>";
                 echo "<p>" . $restaurant->getNom() . "</p>";
-                echo "<div class='coeur'><p>Orléans</p></div>";
+                echo "<p>Orléans</p>";
                 echo "</div>";
+                echo "<div class='coeur'></div>";
                 if ($favoris){
                     $this->addFavoris($restaurant);
                 }

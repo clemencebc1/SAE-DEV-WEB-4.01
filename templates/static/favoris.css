@@ -9,6 +9,7 @@
 .restaurant-card{
     width:20%;
     margin-left:5em;
+    position: relative;
 }
 
 .restaurant-card img {
@@ -41,6 +42,44 @@
     margin: 0;
 }
 
- 
+.coeur {
+    display:flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    position: absolute;
+}
 
+/* généré avec CHATGPT*/
+.svg-heart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-right: 30px;
+}
+
+.svg-heart-btn:hover {
+    transform: scale(1.2);
+}
+
+form{
+    text-align: end;
+    margin-top: -70px;
+}
+
+.texte {
+    margin-top: 50px;
+    margin-left: 48px;
+}
+
+h3 {
+    margin-left: 2%;
+}
+h3 a {
+    color: #fcc306;
+    text-decoration: none;
+}
+#enregistrer {
+    color: #477eae;;
+}
  
