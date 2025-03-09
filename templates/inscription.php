@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
+
 <?php 
 require_once 'autoloader.php';
 Autoloader::register();
@@ -8,12 +7,13 @@ use utils\connection\UserTools;
 include('interfaces-role/global/head.php'); 
 title_html('Inscription');
 link_to_css('static/inscription.css');
+$subscribe = null;
 if (!empty($_POST)){
     $subscribe = DBConnector::subscribe($_POST['email'],$_POST['password'], $_POST['name'], $_POST['prenom'], 'visiteur');
 }
 ?>
 <body>
-    <?php include('interfaces-role/global/header_connected.php'); ?>
+    <?php include('interfaces-role/global/header.php'); ?>
     <main>
         <section class="form-section">
             <div class="form-container">
@@ -35,8 +35,8 @@ if (!empty($_POST)){
                 </form>
                 <p><?php if ($subscribe) {
                             $login = UserTools::login($_POST['email'], $_POST['password']);
-                            header('Location: index_connected.php');
-                        } else {
+                            header('Location: connexion.php');
+                        } else if ($subscribe === false) {
                             $_GET['error'] = true;
                             echo "<p>Vous avez déjà un compte avec ". $_POST['email'] ."</p>";
                         }

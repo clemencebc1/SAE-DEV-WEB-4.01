@@ -33,7 +33,7 @@ link_to_css('static/modifierCritique.css');
                 <label for="etoiles">Etoiles</label>
                 <div class="stars">
                 <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <input type="radio" id="star<?= $i ?>" name="note" value="<?= $i ?>" <?= ($critique->getNote() == $i) ? 'checked' : '' ?>>
+                    <input type="radio" id="star<?= $i ?>" name="note" value="<?= $i ?>" <?= ($critique->getNote()+1 == $i) ? 'checked' : '' ?>>
                     <label for="star<?= $i ?>">★</label>
                 <?php endfor; ?>
                 </div><br>

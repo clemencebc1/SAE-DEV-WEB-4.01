@@ -54,7 +54,7 @@
 
         
                 <section class="categories">
-                    <a href="decouverte.php?type=1" class="category-card">
+                    <a href="decouverte.php?type=84" class="category-card">
                         <img src="img/restaurants/pizza-orleans.png" alt="Pizzeria à Orléans">
                         <span>Pizzeria, Orléans</span>
                     </a>
@@ -62,7 +62,7 @@
                         <img src="img/restaurants/paella-orleans.png" alt="Moules et fruits de mer à Orléans">
                         <span>Paella, Orléans</span>
                     </a>
-                    <a href="decouverte.php?type=1" class="category-card">
+                    <a href="decouverte.php?type=79" class="category-card">
                         <img src="img/poisson.png" alt="Viandes et grillades à Orléans">
                         <span>Viandard, Orléans</span>
                     </a>

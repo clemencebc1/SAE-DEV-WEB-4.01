@@ -90,7 +90,9 @@ use utils\connection\UserTools;?>
         </nav>
         <div class="icons">
             <a href="index_connected.php"><img src="../img/home-icon.png" alt="Accueil"></a>
-            <a href="profil.php"><img src="../img/user-icon.png" alt="Profil"></a>
+            <?php if (!UserTools::isAdmin()) {?>
+                <a href="profil.php"><img src="../img/user-icon.png" alt="Profil"></a>
+            <?php } ?>
             <button class="logout"><a href="utils/connection/logout.php">Se déconnecter</a></button>
         </div>
 </header>

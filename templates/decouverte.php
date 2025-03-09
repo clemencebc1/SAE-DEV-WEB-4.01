@@ -29,7 +29,6 @@ if (!(empty($_GET["search"]))) {
             $typeCuisine = $restaurants[$i]->getTypeCuisine();
             if ($typeCuisine !== null) {
                 $condition = ($_GET["type"] == $typeCuisine ->getId());
-                echo var_dump($condition);
                 if (!$condition) {
                     unset($restaurants[$i]);
                 }

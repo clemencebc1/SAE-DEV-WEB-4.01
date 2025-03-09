@@ -21,8 +21,8 @@ class CritiqueRender extends Render {
             echo "<div>";
             $end = false;
             echo "<span class='stars'>";
-            for ($i = 0; $i<5;$i++){
-                if ($i>$critique['etoiles']-1){
+            for ($i = 1; $i<6;$i++){
+                if ($i>$critique['etoiles']){
                     $end=true;
                     echo "</span>";
                     break;
@@ -32,7 +32,7 @@ class CritiqueRender extends Render {
             }
             if ($end){
                 echo "<span class='no-stars'>";
-                for ($i = 0; $i<5-$critique['etoiles']-1;$i++){
+                for ($i = 0; $i<5-$critique['etoiles'];$i++){
                     echo "★";
                 }
                 echo "</span>";
@@ -136,7 +136,7 @@ class CritiqueRender extends Render {
             $end = false;
             echo "<span class='stars'>";
             for ($i = 0; $i<5;$i++){
-                if ($i>$critique->getNote()-1){
+                if ($i>$critique->getNote()){
                     $end=true;
                     echo "</span>";
                     break;
@@ -146,7 +146,7 @@ class CritiqueRender extends Render {
             }
             if ($end){
                 echo "<span class='no-stars'>";
-                for ($i = 0; $i<5-$critique->getNote()-1;$i++){
+                for ($i = 0; $i<5-$critique->getNote();$i++){
                     echo "★";
                 }
                 echo "</span>";

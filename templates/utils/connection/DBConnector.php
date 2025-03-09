@@ -373,8 +373,8 @@ class DBConnector {
                     $restaurant['capacity'] ?? 0, 
                     $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0, 
                     $restaurant['adresse'] ?? null,
-                    (float) $result['gps_lat'] ?? null,
-                    (float) $result['gps_long'] ?? null,
+                    (float) $restaurant['gps_lat'] ?? null,
+                    (float) $restaurant['gps_long'] ?? null,
                     self::getDepartementById($restaurant['region_id']),
                     $restaurant['url'] ?? '',
                     self::getTypeCuisineById($restaurant['id_cuisine'])
@@ -402,8 +402,8 @@ class DBConnector {
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
                 $restaurant['adresse'] ?? null,
-                (float) $result['gps_lat'] ?? null,
-                (float) $result['gps_long'] ?? null,
+                (float) $restaurant['gps_lat'] ?? null,
+                (float) $restaurant['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
                 $restaurant['url'] ?? '',
                 self::getTypeCuisineById($restaurant['id_cuisine']));
