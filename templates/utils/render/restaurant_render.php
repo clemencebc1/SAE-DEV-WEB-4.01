@@ -17,7 +17,7 @@ class Restaurant_render extends Render {
         echo"<section class='titre'>";
             echo"<h1>Détails du restaurant <span>". $restaurant->getNom() ."</span></h1>";
         echo"</section>";
-        echo"<section>";
+        echo"<section class='image_details'>";
             echo"<div class='image'>";
                 if ($restaurant->getPhotos()) {
                     echo "<img src='" . $restaurant->getPhotos() . "' alt='Photo de " . $restaurant->getNom() . "'>";
