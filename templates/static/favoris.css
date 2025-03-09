@@ -4,13 +4,11 @@
     flex-wrap: wrap;
     gap: 10px;
     width: 30%%; 
-
 }
 
 .restaurant-card{
     width:20%;
     margin-left:5em;
-
 }
 
 .restaurant-card img {
@@ -20,8 +18,29 @@
     height: 450px;
 }
 
-.pas-de-photo{
-    
+.pas-photo p{
+    position: absolute;
+    margin-top: 100px;
+    margin-left: 35px;
 }
+
+.restaurant-info{
+    position: absolute;
+    margin-top: -126px;
+    margin-left: 35px;
+}
+
+.restaurant-info p:first-child {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.restaurant-info p:last-child {
+    font-size: 20px;
+    margin: 0;
+}
+
+ 
 
  

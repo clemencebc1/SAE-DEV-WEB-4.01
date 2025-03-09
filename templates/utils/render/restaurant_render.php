@@ -142,14 +142,14 @@ class Restaurant_render extends Render {
                 $result_photo = $restaurant->getPhotos();
                 $photo = true;
                 if (($result_photo == '' || $result_photo == null) && $favoris){
-                    echo "<div class='pas-photo'>Il n'y a pas de photos pour ce restaurant</div>";
+                    echo "<div class='pas-photo'><p>Il n'y a pas de photos pour ce restaurant</p></div>";
                     $photo = false;
                     echo "<img src='../../img/resto-sans-photo.png' alt='img_restaurant'>";
                 } else if ($favoris || $photo){ 
                     echo "<img src='" . $restaurant->getPhotos() . "' alt='img_restaurant'>";
                 }
                 echo "<div class='restaurant-info'>";
-                echo "<h3>" . $restaurant->getNom() . "</h3>";
+                echo "<p>" . $restaurant->getNom() . "</p>";
                 echo "<div class='coeur'><p>Orléans</p></div>";
                 echo "</div>";
                 if ($favoris){
