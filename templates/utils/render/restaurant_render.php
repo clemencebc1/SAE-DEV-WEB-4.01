@@ -136,26 +136,28 @@ class Restaurant_render extends Render {
         if (empty($this->objects)){
             echo "<h3 id='vide'>Vous n'avez pas encore de restaurants favoris</h3>";
         } else {
+            echo "<div class='restaurant-container'>"; 
             foreach($this->objects as $restaurant){
                 echo "<div class='restaurant-card'>";
                 $result_photo = $restaurant->getPhotos();
                 $photo = true;
                 if (($result_photo == '' || $result_photo == null) && $favoris){
-                    echo "<h4>Il n'y a pas de photos pour ce restaurant</h4>";
+                    echo "<div class='pas-photo'>Il n'y a pas de photos pour ce restaurant</div>";
                     $photo = false;
+                    echo "<img src='../../img/resto-sans-photo.png' alt='img_restaurant'>";
                 } else if ($favoris || $photo){ 
                     echo "<img src='" . $restaurant->getPhotos() . "' alt='img_restaurant'>";
                 }
                 echo "<div class='restaurant-info'>";
-                if ($photo){
-                    echo "<h3>" . $restaurant->getNom() . "</h3>";
-                    echo "<div class='coeur'><p>Orléans</p>";
-                }
+                echo "<h3>" . $restaurant->getNom() . "</h3>";
+                echo "<div class='coeur'><p>Orléans</p></div>";
+                echo "</div>";
                 if ($favoris){
                     $this->addFavoris($restaurant);
                 }
-                echo "</div></div></div>";
+                echo "</div>";
             }
+        echo "</div>";
         }
     }
 

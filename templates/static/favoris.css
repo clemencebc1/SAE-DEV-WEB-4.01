@@ -1,61 +1,27 @@
-
-#vide {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
+.restaurant-container {
+    margin-top:40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 30%%; 
 
 }
 
-.restaurant-card {
-    position: relative;
-    margin: 2%;
-    overflow: hidden;
+.restaurant-card{
+    width:20%;
+    margin-left:5em;
+
 }
 
 .restaurant-card img {
-    width: 70%;
-    height: auto;
-    display: block;
+    height: 150px;
+    object-fit: cover;
     border-radius: 10px;
+    height: 450px;
 }
 
-.restaurant-info {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: black;
-    font-size: 20px;
-    font-weight: bold;
-}
-h3 {
-    margin-left: 2%;
-}
-h3 a {
-    color: #fcc306;
-    text-decoration: none;
-}
-#enregistrer {
-    color: #477eae;;
-}
-#restaurants-favoris {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-top: 20px;
-}
-.coeur {
-    display:flex;
-    flex-wrap: nowrap;
-    justify-content: space-around;
+.pas-de-photo{
+    
 }
 
-/* généré avec CHATGPT*/
-.svg-heart-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.svg-heart-btn:hover {
-    transform: scale(1.2);
-}
+ 
