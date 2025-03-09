@@ -1,3 +1,9 @@
+main {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+}
+
 .image_details{
     display: flex;
 }
@@ -90,8 +96,8 @@ h1 span {
 }
 
 
-
-button {
+.critique {
+    margin-top:25px;
     background-color: #ff9800;
     color: white;
     border: none;
@@ -101,10 +107,15 @@ button {
     border-radius: 8px;
     transition: 0.3s;
     font-weight: bold;
+    margin-right:6px;
 }
 
-button:hover {
+.critique:hover {
     background-color: #e68900;
+}
+
+.coeur_div{
+    text-align: right;
 }
 
 .coeur {

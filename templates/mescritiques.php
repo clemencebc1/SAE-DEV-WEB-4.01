@@ -4,7 +4,7 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
-use utils\render\CritiqueRender;
+use utils\render\critiqueRender;
 UserTools::requireLogin();
 ?>
 

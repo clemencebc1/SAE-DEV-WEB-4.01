@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace utils\render;
 
+use utils\render\render;
+
 class CritiqueRender extends Render {
     function __construct(array $critiques){
         parent::__construct($critiques);

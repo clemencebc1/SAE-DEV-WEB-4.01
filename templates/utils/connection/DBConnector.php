@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace utils\connection;
 use classes\model\Caracteristique;
-use classes\model\Critique;
+use classes\model\critique;
 use \PDO;
 use \Exception;
 use classes\model\restaurant;
@@ -524,6 +524,7 @@ class DBConnector {
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                $restaurant['adresse'] ?? null,
                 (float) $result['gps_lat'] ?? null,
                 (float) $result['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
