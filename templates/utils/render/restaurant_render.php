@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace utils\render;
 require_once 'autoloader.php';
 
-use utils\render\Render;
-use classes\model\Restaurant;
+use utils\render\render;
+use classes\model\restaurant;
 use utils\connection\DBConnector;
 
 class Restaurant_render extends Render {
