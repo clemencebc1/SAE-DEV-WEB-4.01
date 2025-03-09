@@ -55,6 +55,11 @@ class Restaurant_render extends Render {
                         echo "<p><strong>Site web :</strong> <a href='" . htmlspecialchars($website) . "' target='_blank'>" . htmlspecialchars($restaurant->getNom()) . "</a></p>";
                     }
                 echo"</div>";
+                echo "<div class='inscription_lien'>";
+                if (!isset($_SESSION['user'])) {
+                    echo "<p><a href='inscription.php' class='inscription_lien'>Inscrivez-vous dès maintenant pour voir les avis de ce restaurant !</a></p>";
+                }
+                echo "</div>";
             echo"</div>";
         echo"</section>";
     }

@@ -39,8 +39,11 @@ link_to_css('static/details.css');?>
         throw new Exception("restaurant non trouvé");
     }
 
+    echo "<div class='details_bouttons'>";
     $restaurant_render = new Restaurant_render([$restaurant]);
     $restaurant_render->render();
+
+    echo"</div>";
 
     if (count($_SESSION['user'])){
         $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);

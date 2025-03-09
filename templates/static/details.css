@@ -2,11 +2,23 @@
     display: flex;
 }
 
+.image_details img {
+    max-width: 100%;
+    height: auto; 
+    display: block; 
+    margin-top: 2px;
+      
+}
+
 .details_lien{
     margin-top: 30px;
     margin-left: 5em;
     width: 50%;
     height: 400px;
+}
+
+.inscription_lien{
+    color: #6495ED;
 }
 
 
@@ -19,8 +31,10 @@
 
 
 h1 {
-    font-size: 32px;
-    margin-left: 10em;
+    font-size: 40px;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 
