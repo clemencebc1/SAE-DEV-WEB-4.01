@@ -1,51 +1,62 @@
-
-#vide {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-
+main {
+    min-height: 78vh;
 }
 
-.restaurant-card {
+
+.restaurant-container {
+    margin-top:40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 30%%; 
+}
+
+.restaurant-card{
+    width:20%;
+    margin-left:5em;
     position: relative;
-    margin: 2%;
-    overflow: hidden;
 }
 
 .restaurant-card img {
-    width: 70%;
-    height: auto;
-    display: block;
+    height: 150px;
+    object-fit: cover;
     border-radius: 10px;
+    height: 450px;
 }
 
-.restaurant-info {
+.pas-photo p{
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: black;
-    font-size: 20px;
+    margin-top: 100px;
+    margin-left: 35px;
+}
+
+.restaurant-info{
+    position: absolute;
+    margin-top: -126px;
+    margin-left: 35px;
+}
+
+.restaurant-info p:first-child {
+    font-size: 30px;
     font-weight: bold;
+    margin-bottom: 5px;
 }
-h3 {
-    margin-left: 2%;
+
+.restaurant-info p:last-child {
+    font-size: 20px;
+    margin: 0;
 }
-h3 a {
-    color: #fcc306;
+
+.restaurant-info a{
     text-decoration: none;
+    color: black;
 }
-#enregistrer {
-    color: #477eae;;
-}
-#restaurants-favoris {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-top: 20px;
-}
+
 .coeur {
     display:flex;
     flex-wrap: nowrap;
     justify-content: space-around;
+    position: absolute;
 }
 
 /* généré avec CHATGPT*/
@@ -54,8 +65,30 @@ h3 a {
     border: none;
     cursor: pointer;
     transition: transform 0.2s;
+    margin-right: 30px;
 }
 
 .svg-heart-btn:hover {
     transform: scale(1.2);
 }
+
+form{
+    text-align: end;
+    margin-top: -70px;
+}
+
+.texte {
+    margin-top: 50px;
+    margin-left: 48px;
+}
+
+h3 {
+    margin-left: 2%;
+}
+h3 a {
+    color: #fcc306;
+}
+#enregistrer {
+    color: #477eae;;
+}
+ 

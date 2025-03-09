@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace utils\render;
 
+use utils\render\render;
+
+
 class CritiqueRender extends Render {
     function __construct(array $critiques){
         parent::__construct($critiques);
@@ -29,7 +32,7 @@ class CritiqueRender extends Render {
             }
             if ($end){
                 echo "<span class='no-stars'>";
-                for ($i = 0; $i<5-$critique['etoiles'];$i++){
+                for ($i = 0; $i<5-$critique['etoiles']-1;$i++){
                     echo "★";
                 }
                 echo "</span>";
@@ -112,7 +115,7 @@ class CritiqueRender extends Render {
             }
             if ($end){
                 echo "<span class='no-stars'>";
-                for ($i = 0; $i<5-$critique->getNote();$i++){
+                for ($i = 0; $i<5-$critique->getNote()-1;$i++){
                     echo "★";
                 }
                 echo "</span>";
@@ -143,7 +146,7 @@ class CritiqueRender extends Render {
             }
             if ($end){
                 echo "<span class='no-stars'>";
-                for ($i = 0; $i<5-$critique->getNote();$i++){
+                for ($i = 0; $i<5-$critique->getNote()-1;$i++){
                     echo "★";
                 }
                 echo "</span>";

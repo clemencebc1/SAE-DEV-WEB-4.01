@@ -3,9 +3,11 @@ declare(strict_types=1);
 namespace utils\render;
 require_once 'autoloader.php';
 
-use utils\render\Render;
-use classes\model\Restaurant;
+use utils\render\render;
+use utils\render\critiqueRender;
+use classes\model\restaurant;
 use utils\connection\DBConnector;
+
 
 class Restaurant_render extends Render {
 
@@ -15,32 +17,99 @@ class Restaurant_render extends Render {
 
     function render(): void {
         $restaurant = $this->objects[0];
-        echo "<section class='titre'>";
-            echo "<h1>Détails du restaurant " . $restaurant->getNom() . "</h1>";
-        echo "</section>";
-        echo "<section>";
-            echo "<div class='image_nom'>";
-                echo "<div class='image'></div>";
-                echo "<div class='nom'></div>";
-            echo "</div>";
-            echo "<div class='details_lien'>";
-                echo "<div class='details'>";
-                    echo "<p>Adresse : " . $restaurant->getAdresse() . "</p>";
-                    echo "<p>Type de cuisine : ";
-                    $type = $restaurant->getTypeCuisine();
-                    if (isset($type)){
-                        echo $restaurant->getTypeCuisine()->getCuisine();
+        echo"<section class='titre'>";
+            echo"<h1>Détails du restaurant <span>". $restaurant->getNom() ."</span></h1>";
+        echo"</section>";
+        echo"<section class='image_details'>";
+            echo"<div class='image'>";
+                if ($restaurant->getPhotos()) {
+                    echo "<img src='" . $restaurant->getPhotos() . "' alt='Photo de " . $restaurant->getNom() . "'>";
+                } else {
+                    echo "<p>Aucune image disponible</p>";
+                }
+            echo"</div>";
+            echo"<div class='details_lien'>";
+                echo"<div class='details'>";
+                    $typeCuisine = $restaurant->getTypeCuisine();
+                    echo "<p><strong>Type de cuisine :</strong> " . ($typeCuisine ? $typeCuisine->getCuisine() : "Non renseigné") . "</p>";
+                    echo "<p><strong>Inclus : </strong>";
+                    $caracteristiques = DBConnector::getCaracteristiquesByRestaurant($restaurant->getId());
+                    if (!empty($caracteristiques)) {
+                        $count = count($caracteristiques);
+                        for ($i = 0; $i < $count; $i++) {
+                            echo htmlspecialchars($caracteristiques[$i]->getMessage());
+                            // Ajouter une virgule sauf pour le dernier élément
+                            if ($i < $count - 1) {
+                                echo ", ";
+                            }
+                        }
                     } else {
                         echo "Non renseigné";
                     }
-                    echo " </p>";
-                    echo "<p>Inclus : </p>";
-                    echo "<p>Nombre d'étoiles : " . $restaurant->getNbEtoile() . "</p>";
-                    echo "<p>Capacité : " . $restaurant->getCapacity() . "</p>";
-                    echo "<p>Site web : <a href='" . $restaurant->getWebsite() . "'>" . $restaurant->getNom() . "</a></p>";
+                    echo "</p>";
+                    echo "<p><strong>Nombre d'étoiles :</strong> " . ($restaurant->getNbEtoile() ?? "Non renseigné") . "</p>";
+                    echo "<p><strong>Capacité :</strong> " . ($restaurant->getCapacity() ?? "Non renseignée") . "</p>";
+                    echo "<p><strong>Adresse :</strong> " . ($restaurant->getAdresse() ? $restaurant->getAdresse() : "Non renseignée") . "</p>";
+                    $departement = $restaurant->getDepartement();
+                    echo "<p><strong>Département :</strong> " . ($departement ? $departement->getNomdep() : "Non renseigné") . "</p>";
+                    $website = $restaurant->getWebsite();
+                    if (!empty($website)) {
+                        echo "<p><strong>Site web :</strong> <a href='" . htmlspecialchars($website) . "' target='_blank'>" . htmlspecialchars($restaurant->getNom()) . "</a></p>";
+                    }
+                    if (isset($_SESSION['user'])){
+                        echo "<div class='coeur_div'>";
+                            $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
+                            $inFavoris = false;
+
+                            foreach ($favoris as $favori){
+                                if ($favori->getId() == $_GET['id']){
+                                    $inFavoris = true;
+                                }
+                            }
+
+                            $action = ($inFavoris) ? 'utils/gestion-data/delete-favoris.php' : 'utils/gestion-data/add-favoris.php';
+                            $fill = ($inFavoris) ? 'red' : 'grey';
+                            echo "<form method='POST' action='". $action . "' style='display:inline;'>";
+                            echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
+                            echo "<button type='submit' class='svg-heart-btn'><svg viewBox='0 0 24 24' width='40' height='40' fill='". $fill."'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg></button></form>";
+                            echo "</form>";
+                        echo "</div>";
+                    }
+                echo"</div>";
+                if (isset($_SESSION['user'])){
+                    echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
+                    echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
+                    echo "<button type='submit' class='critique_bouton'>Ajouter ma critique</button>";
+                    echo "</form>";
+
+                    $voirCritiques = false;
+                    if (isset($_GET['voir_critiques']) && $_GET['voir_critiques'] == '1') {
+                        $voirCritiques = true;
+                    }
+                    
+                    echo "<form method='GET' action='' style='display:inline;'>";
+                    echo "<input type='hidden' name='id' value='" . htmlspecialchars($_GET['id']) . "'>";
+                    if (!$voirCritiques) {
+                        echo "<button type='submit' class='critique_bouton' name='voir_critiques' value='1'>Voir les critiques de ce restaurant</button>";
+                    } else {
+                        echo "<button type='submit' class='critique_bouton' name='voir_critiques' value='0'>Masquer les critiques</button>";
+                    }
+                    echo "</form>";
+                    if ($voirCritiques) {
+                        echo "<div id='reviews-container'>";
+                        $critiques = DBConnector::getCritiqueByRestaurant($_GET['id']);
+                        if (empty($critiques)) {
+                            echo "<p>Aucune critique disponible pour ce restaurant</p>";
+                        } else {
+                            $renderCritique = new CritiqueRender($critiques);
+                            $renderCritique->render_critiques_restaurant();
+                        }
+                        echo "</div>";
+                    }
+                }
                 echo "</div>";
             echo "</div>";
-        echo "</section>";
+        echo"</section>";
     }
 
     function decouvrir(): void {
@@ -66,26 +135,29 @@ class Restaurant_render extends Render {
         if (empty($this->objects)){
             echo "<h3 id='vide'>Vous n'avez pas encore de restaurants favoris</h3>";
         } else {
+            echo "<div class='restaurant-container'>"; 
             foreach($this->objects as $restaurant){
                 echo "<div class='restaurant-card'>";
                 $result_photo = $restaurant->getPhotos();
                 $photo = true;
                 if (($result_photo == '' || $result_photo == null) && $favoris){
-                    echo "<h4>Il n'y a pas de photos pour ce restaurant</h4>";
+                    echo "<div class='pas-photo'><p>Il n'y a pas de photos pour ce restaurant</p></div>";
                     $photo = false;
+                    echo "<img src='../../img/resto-sans-photo.png' alt='img_restaurant'>";
                 } else if ($favoris || $photo){ 
                     echo "<img src='" . $restaurant->getPhotos() . "' alt='img_restaurant'>";
                 }
                 echo "<div class='restaurant-info'>";
-                if ($photo){
-                    echo "<h3>" . $restaurant->getNom() . "</h3>";
-                    echo "<div class='coeur'><p>Orléans</p>";
-                }
+                    echo "<p><a href='restaurant_details.php?id=" . $restaurant->getId() . "'>" . $restaurant->getNom() . "</a></p>"; 
+                    echo "<p>Orléans</p>";
+                echo "</div>";
+                echo "<div class='coeur'></div>";
                 if ($favoris){
                     $this->addFavoris($restaurant);
                 }
-                echo "</div></div></div>";
+                echo "</div>";
             }
+        echo "</div>";
         }
     }
 

@@ -2,12 +2,12 @@
 session_start();
 require_once 'autoloader.php';
 Autoloader::register();
-use utils\connection\DBconnector;
+use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use classes\model\Departement;
-use classes\model\Restaurant;
+use classes\model\restaurant;
 use classes\model\Critique;
-use utils\render\Restaurant_render;
+use utils\render\restaurant_render;
 include('utils/render/searchRender.php');
 if (isset($_GET['inc'])) {
     $limit = intval($_GET['inc']);
