@@ -10,7 +10,9 @@ main {
     width: 80%;
     margin: auto;
 }
-
+#search-box {
+    display: flex;
+}
 .titles-container {
     text-align: center;
     margin: 40px 0;
@@ -188,4 +190,47 @@ main {
   transform: translateX(-50%) translateY(-100%);
   opacity: 1;
   transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+
+
+#search-suggestions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#search-suggestions form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#search-suggestions button {
+    background: linear-gradient(to right, #f6a72d, #f18b27);
+    border: none;
+    padding: 10px 20px;
+    margin: 15px;
+    border-radius: 50px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+#search-suggestions button:hover {
+    transform: scale(1.05);
+}
+
+#search-suggestions button:active {
+    transform: scale(0.95);
+}
+
+#suggestions h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    margin-top: 0%;
 }
