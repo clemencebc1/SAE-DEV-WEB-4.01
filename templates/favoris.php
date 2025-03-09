@@ -4,7 +4,7 @@ require_once 'autoloader.php';
 Autoloader::register();
 use utils\connection\DBConnector;
 use utils\connection\UserTools;
-use utils\render\Restaurant_render;
+use utils\render\restaurant_render;
 UserTools::requireLogin();
 
 $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);

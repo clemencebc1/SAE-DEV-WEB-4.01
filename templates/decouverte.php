@@ -2,33 +2,13 @@
 session_start();
 require_once 'autoloader.php';
 Autoloader::register();
-use utils\connection\DBconnector;
+use utils\connection\DBConnector;
 use utils\connection\UserTools;
 use classes\model\Departement;
-use classes\model\Restaurant;
+use classes\model\restaurant;
 use classes\model\Critique;
-use utils\render\Restaurant_render;
-
-function renderSuggestionsForm() {
-    $html = "<form action='' method='GET'>";
-    $html .= suggestionProposition($_GET['search'], 5);
-    $html .= "</form>";
-    return $html;
-}
-
-function renderSuggestionsButton($value) {
-    return "<button type='submit' name='search' value='$value'>$value</button>";
-}
-
-function suggestionProposition($initialSequence, $limit){
-    $suggestions = DBconnector::getSuggestions($initialSequence, $limit);
-    $html = "";
-    foreach ($suggestions as $suggestion) {
-        $html .= renderSuggestionsButton($suggestion['nom']);
-    }
-    return $html;
-}
-
+use utils\render\restaurant_render;
+include('utils/render/searchRender.php');
 if (isset($_GET['inc'])) {
     $limit = intval($_GET['inc']);
 }
@@ -48,11 +28,13 @@ if (!(empty($_GET["search"]))) {
         for ($i = 0; $i < count($restaurants); $i++) {
             $typeCuisine = $restaurants[$i]->getTypeCuisine();
             if ($typeCuisine !== null) {
-                $condition = ($_GET["type"] == $typeCuisine->getId());
+                $condition = ($_GET["type"] == $typeCuisine ->getId());
                 echo var_dump($condition);
-                if ($condition) {
+                if (!$condition) {
                     unset($restaurants[$i]);
                 }
+            }else {
+                unset($restaurants[$i]);
             }
         }
     }  
