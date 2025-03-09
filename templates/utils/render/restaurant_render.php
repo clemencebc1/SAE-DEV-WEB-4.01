@@ -62,7 +62,7 @@ class Restaurant_render extends Render {
                             $inFavoris = false;
 
                             foreach ($favoris as $favori){
-                                if ((int) $favori->getId() == (int) $id_restaurant){
+                                if ($favori->getId() == $GET['id']){
                                     $inFavoris = true;
                                     break;
                                 }
@@ -149,8 +149,8 @@ class Restaurant_render extends Render {
                     echo "<img src='" . $restaurant->getPhotos() . "' alt='img_restaurant'>";
                 }
                 echo "<div class='restaurant-info'>";
-                echo "<p>" . $restaurant->getNom() . "</p>";
-                echo "<p>Orléans</p>";
+                    echo "<p><a href='restaurant_details.php?id=" . $restaurant->getId() . "'>" . $restaurant->getNom() . "</a></p>"; 
+                    echo "<p>Orléans</p>";
                 echo "</div>";
                 echo "<div class='coeur'></div>";
                 if ($favoris){

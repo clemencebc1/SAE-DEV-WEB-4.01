@@ -20,7 +20,7 @@ link_to_css('static/favoris.css');
 ?>
 <body>
 <?php include('interfaces-role/global/header_connected.php'); ?>
-    <main>
+    <main class="favoris_page">
         <div id="restaurants-favoris">
             <?php $favoris_render->iconRestaurant(true)?>
         </div>
