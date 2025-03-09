@@ -3,10 +3,6 @@ declare(strict_types=1);
 namespace utils\render;
 require_once 'autoloader.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-session_start();
-
 use utils\render\render;
 use utils\render\critiqueRender;
 use classes\model\restaurant;
@@ -62,6 +58,16 @@ class Restaurant_render extends Render {
                     }
                     if (count($_SESSION['user'])){
                         echo "<div class='coeur_div'>";
+                            $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
+                            $inFavoris = false;
+
+                            foreach ($favoris as $favori){
+                                if ((int) $favori->getId() == (int) $id_restaurant){
+                                    $inFavoris = true;
+                                    break;
+                                }
+                            }
+
                             $action = ($inFavoris) ? 'utils/gestion-data/delete-favoris.php' : 'utils/gestion-data/add-favoris.php';
                             $fill = ($inFavoris) ? 'red' : 'grey';
                             echo "<form method='POST' action='". $action . "' style='display:inline;'>";
@@ -72,16 +78,9 @@ class Restaurant_render extends Render {
                     }
                 echo"</div>";
                 if (count($_SESSION['user'])){
-                    $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
-                    $inFavoris = false;
-                    foreach ($favoris as $favori){
-                        if ($favori->getId() == $id_restaurant){
-                            $inFavoris = true;
-                        }
-                    }
                     echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
                     echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
-                    echo "<button type='submit' class='critique'>Ajouter ma critique</button>";
+                    echo "<button type='submit' class='critique_bouton'>Ajouter ma critique</button>";
                     echo "</form>";
 
                     $voirCritiques = false;
@@ -92,9 +91,9 @@ class Restaurant_render extends Render {
                     echo "<form method='GET' action='' style='display:inline;'>";
                     echo "<input type='hidden' name='id' value='" . htmlspecialchars($_GET['id']) . "'>";
                     if (!$voirCritiques) {
-                        echo "<button type='submit' class='critique' name='voir_critiques' value='1'>Voir les critiques de ce restaurant</button>";
+                        echo "<button type='submit' class='critique_bouton' name='voir_critiques' value='1'>Voir les critiques de ce restaurant</button>";
                     } else {
-                        echo "<button type='submit' class='critique' name='voir_critiques' value='0'>Masquer les critiques</button>";
+                        echo "<button type='submit' class='critique_bouton' name='voir_critiques' value='0'>Masquer les critiques</button>";
                     }
                     echo "</form>";
                     if ($voirCritiques) {

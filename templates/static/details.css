@@ -1,6 +1,4 @@
 main {
-    display: flex;
-    flex-direction: column;
     min-height: 80vh;
 }
 
@@ -96,7 +94,7 @@ h1 span {
 }
 
 
-.critique {
+.critique_bouton {
     margin-top:25px;
     background-color: #ff9800;
     color: white;
@@ -110,7 +108,7 @@ h1 span {
     margin-right:6px;
 }
 
-.critique:hover {
+.critique_bouton:hover {
     background-color: #e68900;
 }
 
@@ -137,5 +135,41 @@ h1 span {
 }
 
 
+.critique-container {
+    max-width: 550px;
+    margin-top: 20px;
+}
+
+.critique {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.critique h2 {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.critique p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.stars {
+    color: gold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.no-stars {
+    color: rgb(184, 184, 184);
+    font-size: 18px;
+    margin-bottom: 5px;
+}
 
 
