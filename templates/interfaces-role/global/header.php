@@ -9,12 +9,6 @@ header {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #000;
-}
-
 nav a {
   margin: 0 1rem;
   text-decoration: none;
@@ -40,10 +34,29 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+.logo {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
 
+.logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.logo a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
 </style>
 <header>
-    <div class="logo">IUTables’O</div>
+    <div class="logo">
+            <img src="../img/logo.png" alt="Logo IUTables’O">
+            <span id="home"><a href="index.php"">IUTables’O</a></span>
+      </div>
     <nav>
       <a href="decouverte.php">Découvrir</a>
       <a href="#">Avis</a>
