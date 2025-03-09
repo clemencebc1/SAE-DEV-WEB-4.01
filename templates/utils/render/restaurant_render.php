@@ -3,9 +3,15 @@ declare(strict_types=1);
 namespace utils\render;
 require_once 'autoloader.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+session_start();
+
 use utils\render\render;
+use utils\render\critiqueRender;
 use classes\model\restaurant;
 use utils\connection\DBConnector;
+
 
 class Restaurant_render extends Render {
 
@@ -64,38 +70,47 @@ class Restaurant_render extends Render {
                             echo "</form>";
                         echo "</div>";
                     }
+                echo"</div>";
+                if (count($_SESSION['user'])){
+                    $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
+                    $inFavoris = false;
+                    foreach ($favoris as $favori){
+                        if ($favori->getId() == $id_restaurant){
+                            $inFavoris = true;
+                        }
+                    }
+                    echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
+                    echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
+                    echo "<button type='submit' class='critique'>Ajouter ma critique</button>";
                     echo "</form>";
-            echo"</div>";
-            if (count($_SESSION['user'])){
-                $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
-                $inFavoris = false;
-                foreach ($favoris as $favori){
-                    if ($favori->getId() == $id_restaurant){
-                        $inFavoris = true;
+
+                    $voirCritiques = false;
+                    if (isset($_GET['voir_critiques']) && $_GET['voir_critiques'] == '1') {
+                        $voirCritiques = true;
+                    }
+                    
+                    echo "<form method='GET' action='' style='display:inline;'>";
+                    echo "<input type='hidden' name='id' value='" . htmlspecialchars($_GET['id']) . "'>";
+                    if (!$voirCritiques) {
+                        echo "<button type='submit' class='critique' name='voir_critiques' value='1'>Voir les critiques de ce restaurant</button>";
+                    } else {
+                        echo "<button type='submit' class='critique' name='voir_critiques' value='0'>Masquer les critiques</button>";
+                    }
+                    echo "</form>";
+                    if ($voirCritiques) {
+                        echo "<div id='reviews-container'>";
+                        $critiques = DBConnector::getCritiqueByRestaurant($_GET['id']);
+                        if (empty($critiques)) {
+                            echo "<p>Aucune critique disponible pour ce restaurant</p>";
+                        } else {
+                            $renderCritique = new CritiqueRender($critiques);
+                            $renderCritique->render_critiques_restaurant();
+                        }
+                        echo "</div>";
                     }
                 }
-                echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
-                echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
-                echo "<button type='submit' class='critique'>Ajouter ma critique</button>";
-                echo "</form>";
-                
-                $voirCritiques = isset($_GET['voir_critiques']) && $_GET['voir_critiques'] == '1';
-                echo "<form method='GET' action='' style='display:inline;'>";
-                echo "<input type='hidden' name='id' value='" . htmlspecialchars($_GET['id']) . "'>";
-                if (!$voirCritiques) {
-                    echo "<button type='submit' class='critique' name='voir_critiques' value='1'>Voir les critiques de ce restaurant</button>";
-                } else {
-                    echo "<button type='submit' class='critique' name='voir_critiques' value='0'>Masquer les critiques</button>";
-                }
-                echo "</form>";
-                if ($voirCritiques) {
-                    echo "<div id='reviews-container'>";
-                    $critiques = DBConnector::getCritiqueByRestaurant(intval($_GET['id']));
-                    $renderCritique = new CritiqueRender($critiques);
-                    $renderCritique->render_critiques_restaurant();
-                    echo "</div>";
-                }
-            }
+                echo "</div>";
+            echo "</div>";
         echo"</section>";
     }
 

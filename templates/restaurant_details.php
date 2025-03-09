@@ -1,6 +1,6 @@
 <?php
 
-use utils\render\CritiqueRender;
+use utils\render\critiqueRender;
 session_start();
 require_once 'autoloader.php';
 Autoloader::register();

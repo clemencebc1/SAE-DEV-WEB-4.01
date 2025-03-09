@@ -8,7 +8,7 @@ use \Exception;
 use classes\model\restaurant;
 use classes\model\departement;
 use classes\model\TypeCuisine;
-use classes\model\User;
+use classes\model\user;
 
 class DBConnector {
     private $pdo;
@@ -262,7 +262,7 @@ class DBConnector {
             $result['id_resto'], 
             $result['nom'], 
             $result['website'] ?? '', 
-            $result['capacity'] ?? 0, 
+            (int) $result['capacity'] ?? 0, 
             $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0,
             $restaurant['adresse'] ?? null,
             (float) $result['gps_lat'] ?? null,
@@ -502,7 +502,7 @@ class DBConnector {
         $result = $query->fetchAll();
         $all_critiques = array();
         foreach ($result as $critique) {
-            array_push($all_critiques,new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], '', '', array()), $critique['date_test'], $critique['etoiles']));
+            array_push($all_critiques,new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', 0, 0, '', 0.0, 0.0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], '', '', array()), $critique['date_test'], $critique['etoiles']));
         }
         return $all_critiques;
     }
