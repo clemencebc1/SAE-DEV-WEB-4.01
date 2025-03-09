@@ -108,6 +108,7 @@ class DBConnector {
 
     public static function updateUser($username, $nom, $prenom, $password): bool {
         $user = DBConnector::getUser($username);
+        $hash = hash('sha1', $password);
         if ($user->getPassword() == $password) {
             $hash = $user->getPassword();
         }
@@ -237,8 +238,8 @@ class DBConnector {
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
                 $restaurant['adresse'] ?? null,
-                (float) $result['gps_lat'] ?? null,
-                (float) $result['gps_long'] ?? null,
+                (float) $restaurant['gps_lat'] ?? null,
+                (float) $restaurant['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
                 $restaurant['url'] ?? '',
                 self::getTypeCuisineById($restaurant['id_cuisine']) ?? new TypeCuisine(0, ''));
@@ -313,6 +314,7 @@ class DBConnector {
                 $restaurant['website'] ?? '', 
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
+                $restaurant['adresse'] ?? null,
                 (float) $result['gps_lat'] ?? null,
                 (float) $result['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
@@ -430,7 +432,7 @@ class DBConnector {
      * @return mixed le restaurant en question.
      */
     public static function getLatestRestaurant($user): mixed {
-        $query = self::getInstance()->prepare('SELECT nom, id_resto, url, adresse, website, capacity, nb_etoile, id_cuisine, region_id FROM public."Critique" natural join public."Restaurant"  natural left join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
+        $query = self::getInstance()->prepare('SELECT nom, id_resto, url, adresse, website, capacity, nb_etoile, id_cuisine, region_id, gps_lat, gps_long FROM public."Critique" natural join public."Restaurant"  natural left join public."Photo" WHERE mail_user=:user ORDER BY date_test DESC LIMIT 1');
         $query->execute(['user' => $user]);
         $result = $query->fetch();
         if (!$result) {
@@ -442,6 +444,7 @@ class DBConnector {
             $result['website'] ?? '', 
             $result['capacity'] ?? 0, 
             $result['nb_etoile'] != 0 ? $result['nb_etoile'] : 0, 
+            $result['adresse'] ?? null,
             (float) $result['gps_lat'] ?? null,
             (float) $result['gps_long'] ?? null,
             self::getDepartementById($result['region_id']),
@@ -471,7 +474,7 @@ class DBConnector {
         $result = $query->fetchAll();
         $all_critiques = [];
         foreach ($result as $critique) {
-            $all_critiques[] = new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], $critique['prenom'], '', array()), $critique['date_test'], $critique['etoiles']);
+            $all_critiques[] = new Critique($critique['id_critique'], $critique['message'], new Restaurant($critique['id_resto'],$critique['nom'], '', 0, 0,'', 0., 0., new Departement(0, ''), '', new TypeCuisine(0, '')), new User($critique['mail'], '', $critique['nom_user'], $critique['prenom'], '', array()), $critique['date_test'], $critique['etoiles']);
         }
         return $all_critiques;
     }
@@ -486,7 +489,7 @@ class DBConnector {
         $query = self::getInstance()->prepare('SELECT * FROM public."Critique" WHERE id_critique=:id');
         $query->execute(['id' => $id_critique]);
         $result = $query->fetch();
-        $critique = new Critique($result['id_critique'], $result['message'], new Restaurant($result['id_resto'],'', '', '', 0, 0, new Departement(0, ''), '', new TypeCuisine(0, '')), new User('', '', '', '', '', array()), $result['date_test'], $result['etoiles']);
+        $critique = new Critique($result['id_critique'], $result['message'], new Restaurant($result['id_resto'],'', '', 0, 0,'',0., 0., new Departement(0, ''), '', new TypeCuisine(0, '')), new User('', '', '', '', '', array()), $result['date_test'], $result['etoiles']);
         return $critique;
     }
 
@@ -513,7 +516,7 @@ class DBConnector {
     * @return array Les favoris de l'utilisateur.
     */
     public static function getFavorisByUser($user): array {
-        $query = self::getInstance()->prepare('Select * from public."aimer" natural join public."Restaurant" natural left join public."Photo" where mail=:user');
+        $query = self::getInstance()->prepare('Select id_resto, nom, website, capacity, nb_etoile, adresse, gps_lat, gps_long, url, region_id, id_cuisine from public."aimer" natural join public."Restaurant" natural left join public."Photo" where mail=:user');
         $query->execute(['user' => $user]);
         $result = $query->fetchAll();
         $all_restaurants = [];
@@ -525,8 +528,8 @@ class DBConnector {
                 $restaurant['capacity'] ?? 0, 
                 $restaurant['nb_etoile'] != 0 ? $restaurant['nb_etoile'] : 0,
                 $restaurant['adresse'] ?? null,
-                (float) $result['gps_lat'] ?? null,
-                (float) $result['gps_long'] ?? null,
+                (float) $restaurant['gps_lat'] ?? null,
+                (float) $restaurant['gps_long'] ?? null,
                 self::getDepartementById($restaurant['region_id']),
                 $restaurant['url'] ?? '',
                 self::getTypeCuisineById($restaurant['id_cuisine']));

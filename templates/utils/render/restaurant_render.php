@@ -62,7 +62,7 @@ class Restaurant_render extends Render {
                             $inFavoris = false;
 
                             foreach ($favoris as $favori){
-                                if ($favori->getId() == $GET['id']){
+                                if ($favori->getId() == $_GET['id']){
                                     $inFavoris = true;
                                 }
                             }
