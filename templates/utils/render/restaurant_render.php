@@ -56,7 +56,7 @@ class Restaurant_render extends Render {
                     if (!empty($website)) {
                         echo "<p><strong>Site web :</strong> <a href='" . htmlspecialchars($website) . "' target='_blank'>" . htmlspecialchars($restaurant->getNom()) . "</a></p>";
                     }
-                    if (count($_SESSION['user'])){
+                    if (isset($_SESSION['user'])){
                         echo "<div class='coeur_div'>";
                             $favoris = DBConnector::getFavorisByUser($_SESSION['user']['username']);
                             $inFavoris = false;
@@ -64,7 +64,6 @@ class Restaurant_render extends Render {
                             foreach ($favoris as $favori){
                                 if ($favori->getId() == $GET['id']){
                                     $inFavoris = true;
-                                    break;
                                 }
                             }
 
@@ -77,7 +76,7 @@ class Restaurant_render extends Render {
                         echo "</div>";
                     }
                 echo"</div>";
-                if (count($_SESSION['user'])){
+                if (isset($_SESSION['user'])){
                     echo "<form method='GET' action='ajouterCritique.php' style='display:inline;'>";
                     echo "<input type='hidden' name='id' value='" . $_GET['id'] . "'>";
                     echo "<button type='submit' class='critique_bouton'>Ajouter ma critique</button>";
