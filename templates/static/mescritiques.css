@@ -3,6 +3,7 @@ main {
     background-color: #f8f8f8;
     padding: 20px;
     text-align: center;
+    min-height: 77vh;
 }
 
 .critique-container {
